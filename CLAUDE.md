@@ -47,8 +47,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 0 | Inspect, PRD → `docs/PRD.md`, plan, CLAUDE.md | ✅ done |
 | 1 | Phase 1: repo scaffold, Makefile, `.env.example`, CI, FastAPI `/health`, Next.js shell | ✅ done (commit `phase 1`) |
 | 🔐 A | Push to GitHub (`git push -u origin main`) so CI runs. Needs your GitHub auth | waiting on human |
-| 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ⏳ next |
-| 3 | Phase 3: analytics engine + expected-stats script + tests | todo |
+| 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ✅ done (commit `phase 2`) |
+| 3 | Phase 3: analytics engine + expected-stats script + tests | ⏳ next |
 | 4 | Phase 4: EventSource, simulator, event bus | todo |
 | 5 | Phase 5: REST API + SSE | todo |
 | 6 | Phase 6: frontend on mock data + Playwright smoke | todo |
@@ -73,14 +73,21 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   shape), 2 tests; frontend Next.js 16.4 shell at `/match/[matchId]` (`/` redirects to `/match/demo_01`) with
   green health badge + fictional-data footer; Makefile (`dev`, `test`, `lint`, `format`, `generate-data`,
   `prewarm`, `docker-build`); `.github/workflows/ci.yml`; MIT LICENSE. `make dev` + `make test` verified.
+- Step 2 done: `app/models/events.py` (Event, EventType, `display_clock`), `app/models/meta.py` (MatchMeta),
+  `app/events/xg.py` (synthetic xG formula), `app/events/generator.py` (MatchBuilder: seeded background
+  possessions steered by `SEGMENTS` + scripted storyline `beats()`), committed `data/matches/demo_01.jsonl`
+  (1959 events, 1–1), `demo_01.meta.json`, `demo_01.storyline.md`, `data/schema/event.schema.json`.
+  `tests/unit/test_generator.py` (13 tests: determinism, committed file == generator output, ordering, clock,
+  goal→shot links, storyline beats, xG formula, squads, schema current). 15 backend tests green.
 
 ## Next steps
 
-- Step 2 (Phase 2, spec §5): `backend/app/models/events.py` + `meta.py` (Pydantic), export JSON Schema to
-  `data/schema/event.schema.json`, seeded `backend/app/events/generator.py` (CLI `python -m app.events.generator
-  --seed 42 --match-id demo_01`), outputs `data/matches/demo_01.{jsonl,meta.json}` and `demo_01.storyline.md`.
-  Tests: same seed → identical bytes; all events validate; unique IDs; goals link to shots; storyline present.
-  (`demo_01.expected_stats.json` is produced in Step 3 by `scripts/compute_expected_stats.py`.)
+- Step 3 (Phase 3, spec §6): `backend/app/analytics/` pure functions (definitions, possession, shots, passing,
+  territory, players, score, windows, context, state=MatchState incremental + idempotent + reset), every metric
+  returns value + contributing event IDs. `docs/metrics.md`. `scripts/compute_expected_stats.py` (slow,
+  independent) → `data/matches/demo_01.expected_stats.json` at 15', 45', 69', 90'. Tests: hand fixtures incl.
+  71/29 worked example, duplicates, reset, goal not double-counted, pass accuracy None, window boundaries,
+  fast engine == expected stats exactly.
 - 🔐 A can happen any time: `cd microhackathon && git push -u origin main`.
 
 ## Important things to keep in mind
@@ -101,6 +108,18 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   (Step 14). `make dev-web` exports `NEXT_PUBLIC_*` from root `.env`; backend reads root `.env` via pydantic-settings.
 - `make test` = backend ruff + format check + mypy + pytest, then frontend eslint + typecheck. Playwright is added
   in Step 6.
+- **Generator facts other steps rely on:** 1st half 0–2820 s, 2nd half 2820–5760 s (`H2_START`, `FULL_TIME`);
+  display minute in 2nd half = 45 + (t − 2820)//60, so 69' ≈ t 4260. `possession_team_id` is `None` after an
+  incomplete pass or clearance (loose ball = unassigned time). Possession changes only on the winning team's
+  event. Goal events link to their shot via `related_event_ids`; recoveries/tackles from a press link to the
+  `pressure` event. Substitution: `player_id` goes off, `recipient_id` comes on. Ruff ignores E501 (formatter
+  owns line length).
+- **Any change to generator.py changes demo_01.** Regenerate with `make generate-data`; the test
+  `test_committed_file_matches_generator_output` fails until you do. Re-run expected stats (Step 3) after too.
+- Approximate detector check from Step 2 (spec defaults): high press RVA ~42:42, sustained pressure NBR ~66:40,
+  momentum → RVA ~77:50; **emergent** momentum → RVA at ~12:38 and ~44:29 (documented in storyline.md). Re-verify
+  with the real detectors in Step 8; retune `SEGMENTS` only if needed.
+- Shell gotcha: a `python3 - <<EOF` heredoc followed by a newline does NOT gate later commands; chain with `&&`.
 
 ## Problems faced and solutions
 
@@ -111,3 +130,6 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | `uv`, `pnpm` not installed | `brew install uv pnpm` |
 | `tsc` failed: `Cannot find name 'PageProps'` | Run `next typegen` first (`pnpm typecheck` does both) |
 | `git commit` had no identity configured | Set repo-local `user.name`/`user.email` |
+| Generator: beat started before current clock (background overran) | Margins sized to the worst-case action (14 s); dead-ball gaps capped at the beat time; no `out_of_play` while the ball is already dead |
+| Sustained pressure did not fire (too few final-third entries) | Smaller margins so background plays between beats; dominant team recycles the ball out of the box and re-enters |
+| Many spurious momentum shifts from background noise | Lowered background attack/shot tendencies; shaped segments so the "leader" only flips where the storyline wants |

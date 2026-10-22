@@ -1,0 +1,273 @@
+{
+  "match_id": "demo_01",
+  "competition": "Synthetic League",
+  "venue": "Northbridge Park",
+  "kickoff": "2026-10-24T15:00:00Z",
+  "seed": 42,
+  "home_team_id": "NBR",
+  "away_team_id": "RVA",
+  "teams": [
+    {
+      "team_id": "NBR",
+      "name": "Northbridge FC",
+      "short_name": "Northbridge",
+      "primary_color": "#1B3A6B",
+      "secondary_color": "#F2B705",
+      "formation": "4-3-3"
+    },
+    {
+      "team_id": "RVA",
+      "name": "Riverside Athletic",
+      "short_name": "Riverside",
+      "primary_color": "#0F8B8D",
+      "secondary_color": "#F4F1E8",
+      "formation": "4-2-3-1"
+    }
+  ],
+  "squads": {
+    "NBR": [
+      {
+        "player_id": "NBR_01",
+        "name": "Elias Brandt",
+        "shirt_number": 1,
+        "position": "GK",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_02",
+        "name": "Marcus Holloway",
+        "shirt_number": 2,
+        "position": "RB",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_04",
+        "name": "Jonah Achterberg",
+        "shirt_number": 4,
+        "position": "CB",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_05",
+        "name": "Kofi Danso",
+        "shirt_number": 5,
+        "position": "CB",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_03",
+        "name": "Luca Ferrandi",
+        "shirt_number": 3,
+        "position": "LB",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_06",
+        "name": "Owen Prentice",
+        "shirt_number": 6,
+        "position": "DM",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_08",
+        "name": "Rafael Quintero",
+        "shirt_number": 8,
+        "position": "CM",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_10",
+        "name": "Sami Ilunga",
+        "shirt_number": 10,
+        "position": "AM",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_07",
+        "name": "Ilya Vossberg",
+        "shirt_number": 7,
+        "position": "RW",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_11",
+        "name": "Theo Marchetti",
+        "shirt_number": 11,
+        "position": "LW",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_09",
+        "name": "Tomas Reyes",
+        "shirt_number": 9,
+        "position": "ST",
+        "starter": true
+      },
+      {
+        "player_id": "NBR_12",
+        "name": "Callum Ridley",
+        "shirt_number": 12,
+        "position": "GK",
+        "starter": false
+      },
+      {
+        "player_id": "NBR_14",
+        "name": "Aaron Whitlock",
+        "shirt_number": 14,
+        "position": "CM",
+        "starter": false
+      },
+      {
+        "player_id": "NBR_15",
+        "name": "Niko Saarinen",
+        "shirt_number": 15,
+        "position": "RB",
+        "starter": false
+      },
+      {
+        "player_id": "NBR_17",
+        "name": "Jamal Okoro",
+        "shirt_number": 17,
+        "position": "LW",
+        "starter": false
+      },
+      {
+        "player_id": "NBR_19",
+        "name": "Ben Castellanos",
+        "shirt_number": 19,
+        "position": "CM",
+        "starter": false
+      }
+    ],
+    "RVA": [
+      {
+        "player_id": "RVA_01",
+        "name": "Viktor Lindqvist",
+        "shirt_number": 1,
+        "position": "GK",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_02",
+        "name": "Dario Mendes",
+        "shirt_number": 2,
+        "position": "RB",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_05",
+        "name": "Patrick Oyelaran",
+        "shirt_number": 5,
+        "position": "CB",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_06",
+        "name": "Hugo Delacorte",
+        "shirt_number": 6,
+        "position": "CB",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_03",
+        "name": "Finn Albrecht",
+        "shirt_number": 3,
+        "position": "LB",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_04",
+        "name": "Mateo Szabo",
+        "shirt_number": 4,
+        "position": "DM",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_08",
+        "name": "Kwabena Harlow",
+        "shirt_number": 8,
+        "position": "CM",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_10",
+        "name": "Leon Vasquez-Aldana",
+        "shirt_number": 10,
+        "position": "AM",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_07",
+        "name": "Ciaran Fennimore",
+        "shirt_number": 7,
+        "position": "RW",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_11",
+        "name": "Yusuf Brightwater",
+        "shirt_number": 11,
+        "position": "LW",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_09",
+        "name": "Andrei Kovalski",
+        "shirt_number": 9,
+        "position": "ST",
+        "starter": true
+      },
+      {
+        "player_id": "RVA_13",
+        "name": "Joel Pemberton",
+        "shirt_number": 13,
+        "position": "GK",
+        "starter": false
+      },
+      {
+        "player_id": "RVA_14",
+        "name": "Emil Rasmussen-Toft",
+        "shirt_number": 14,
+        "position": "CM",
+        "starter": false
+      },
+      {
+        "player_id": "RVA_16",
+        "name": "Grady Nwosu",
+        "shirt_number": 16,
+        "position": "LB",
+        "starter": false
+      },
+      {
+        "player_id": "RVA_18",
+        "name": "Santi Oberlin",
+        "shirt_number": 18,
+        "position": "ST",
+        "starter": false
+      },
+      {
+        "player_id": "RVA_20",
+        "name": "Rory Castellane",
+        "shirt_number": 20,
+        "position": "CM",
+        "starter": false
+      }
+    ]
+  },
+  "periods": [
+    {
+      "period": 1,
+      "start_second": 0,
+      "end_second": 2820
+    },
+    {
+      "period": 2,
+      "start_second": 2820,
+      "end_second": 5760
+    }
+  ],
+  "final_score": {
+    "NBR": 1,
+    "RVA": 1
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "$defs": {
+    "EventType": {
+      "enum": [
+        "period_start",
+        "period_end",
+        "kickoff",
+        "pass",
+        "carry",
+        "shot",
+        "goal",
+        "tackle",
+        "interception",
+        "recovery",
+        "pressure",
+        "clearance",
+        "foul",
+        "card",
+        "out_of_play",
+        "substitution"
+      ],
+      "title": "EventType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "match_id": {
+      "title": "Match Id",
+      "type": "string"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "seq": {
+      "minimum": 0,
+      "title": "Seq",
+      "type": "integer"
+    },
+    "period": {
+      "enum": [
+        1,
+        2
+      ],
+      "title": "Period",
+      "type": "integer"
+    },
+    "match_second": {
+      "minimum": 0,
+      "title": "Match Second",
+      "type": "integer"
+    },
+    "minute": {
+      "minimum": 0,
+      "title": "Minute",
+      "type": "integer"
+    },
+    "second": {
+      "maximum": 59,
+      "minimum": 0,
+      "title": "Second",
+      "type": "integer"
+    },
+    "team_id": {
+      "title": "Team Id",
+      "type": "string"
+    },
+    "player_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Player Id"
+    },
+    "event_type": {
+      "$ref": "#/$defs/EventType"
+    },
+    "outcome": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Outcome"
+    },
+    "x": {
+      "anyOf": [
+        {
+          "maximum": 105.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "X"
+    },
+    "y": {
+      "anyOf": [
+        {
+          "maximum": 68.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Y"
+    },
+    "end_x": {
+      "anyOf": [
+        {
+          "maximum": 105.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "End X"
+    },
+    "end_y": {
+      "anyOf": [
+        {
+          "maximum": 68.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "End Y"
+    },
+    "possession_team_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Possession Team Id"
+    },
+    "possession_id": {
+      "minimum": 0,
+      "title": "Possession Id",
+      "type": "integer"
+    },
+    "recipient_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Recipient Id"
+    },
+    "shot_outcome": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shot Outcome"
+    },
+    "xg": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Xg"
+    },
+    "under_pressure": {
+      "default": false,
+      "title": "Under Pressure",
+      "type": "boolean"
+    },
+    "in_play": {
+      "default": true,
+      "title": "In Play",
+      "type": "boolean"
+    },
+    "related_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Related Event Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "match_id",
+    "event_id",
+    "seq",
+    "period",
+    "match_second",
+    "minute",
+    "second",
+    "team_id",
+    "event_type",
+    "possession_id"
+  ],
+  "title": "Event",
+  "type": "object"
+}
