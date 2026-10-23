@@ -54,16 +54,23 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 6 | Phase 6: frontend on mock data + Playwright smoke | ✅ done (commit `phase 6`) |
 | 7 | Phase 7: connect frontend to real API/SSE | ✅ done (commit `phase 7`) |
 | 8 | Phase 8: pattern detectors + key moments | ✅ done (commit `phase 8`) |
-| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | ⏳ next |
+| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test **+ visible "Grounding check" on cards** | ⏳ next |
 | 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | waiting on human |
-| 10 | Phase 10: FoundryAIProvider, prompts, prewarm | todo |
-| 🔐 C | (optional) Fabric workspace + Eventstream custom endpoint connection strings | waiting on human |
-| 11 | Phase 11: Fabric source/publisher | todo |
-| 12 | Phase 12: persistence (SQLAlchemy, Alembic) | todo |
-| 13 | Phase 13: UX polish, accessibility, demo mode | todo |
+| 10 | Phase 10: FoundryAIProvider, prompts, structured output, fallback, cache, prewarm | todo |
+| 11 | **NEW (judging lever): MCP server with read-only match tools + "Ask the match" agent** (Foundry tool calling over the same tools, answers checked by the same validator) + chat panel in the UI | todo |
+| 12 | **NEW: Club-focused and Player-focused modes** (modes are data; small UI picker) | todo |
+| 13 | Phase 12: persistence (SQLAlchemy, Alembic, Postgres) | todo |
+| 14 | Phase 13: UX polish, accessibility, demo mode < 90 s, Lighthouse ≥ 90 | todo |
 | 🔐 D | Install az/azd/Docker, `az login`, `azd up` | waiting on human |
-| 14 | Phase 14: Dockerfiles, Bicep, azd, README, docs, smoke test | todo |
-| 15 | Stretch goals | todo |
+| 15 | Phase 14: Dockerfiles, Bicep, azd, README, docs, demo script, smoke test | todo |
+| 🔐 C | (optional) Fabric workspace + Eventstream custom endpoint connection strings | waiting on human |
+| 16 | Phase 11: Fabric source/publisher. **Deprioritised: only if time remains** | todo |
+| 17 | Remaining stretch: Broadcaster/Fantasy modes, multilingual, Agent Framework multi-agent | todo |
+
+**Plan change (2026-10-23, agreed with the human):** the order was changed to raise the "Agentic Design &
+Innovation" and "Best Use of Foundry" scores: grounding made visible (Step 9), "Ask the match" agent + MCP (Step 11)
+and Club/Player modes (Step 12) come before persistence/deploy; Fabric moves to the end as optional. Deadline
+Oct 27, 6 pm PT: if time runs short, cut from the bottom of the table (17, then 16, then 12), never Steps 9–11, 13–15.
 
 ## Current progress
 
@@ -147,6 +154,11 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   same facts; recap time safety; E2E `tests/e2e/test_pipeline.py` (§14 list). Update the mock Playwright smoke and
   re-record the mock fixture (`make record-mock`) so it uses real insights. Add the real-API Playwright "Demo →
   insight card + recap" test.
+- **Step 9 addition, visible grounding:** store every generation attempt on the Insight/Recap (e.g.
+  `attempts: [{generated_by, passed, violations}]`) and show a "Grounding check" in the card's Evidence area: "Passed
+  first time" or "Draft rejected: invented number 4 (shots) → regenerated → passed" or "Fell back to template".
+  Must be honest: in mock mode drafts always pass. A deliberate validator demo, if added, must be clearly labelled
+  as one (e.g. a tested `/debug` or docs example), never presented as real model output.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 

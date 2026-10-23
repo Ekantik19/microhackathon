@@ -4,6 +4,13 @@ One-page plan. Status tracking lives in `CLAUDE.md`; this page records phases, a
 
 ## Phases
 
+**Reprioritised on 2026-10-23 (human decision, to target the judging criteria):** after Phase 9 (with a visible
+"Grounding check") and Phase 10 (Foundry), we build an "Ask the match" agent with an MCP server of read-only match
+tools, then Club/Player modes, before persistence, polish and deployment. Fabric (Phase 11) becomes optional and
+moves last. This deliberately starts two stretch items before the full MVP list because they target the
+weakest-scoring criterion (Agentic Design & Innovation). Cut order if time runs short: remaining stretch → Fabric →
+Club/Player modes.
+
 Phases follow `docs/MASTER_PROMPT.md` §14, in order. Each ends with `make dev` runnable, `make test` green and a
 commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE → 6 frontend (mock) → 7 connect →
 8 patterns → 9 mock AI + validator → 10 Foundry → 11 Fabric → 12 persistence → 13 UX polish → 14 deploy + docs →
