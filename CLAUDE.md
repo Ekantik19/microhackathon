@@ -153,8 +153,13 @@ Oct 27, 6 pm PT: if time runs short, cut from the bottom of the table (17, then 
 
 - **🔐 Checkpoint B (human):** create a Microsoft Foundry project + chat model deployment (e.g. gpt-4.1-mini), put
   `AI_PROVIDER=foundry`, `FOUNDRY_ENDPOINT`, `FOUNDRY_API_KEY`, `FOUNDRY_MODEL_DEPLOYMENT` in repo-root `.env`
-  (never in chat). Before giving instructions, CHECK CURRENT FOUNDRY DOCS (web-fetch) for the endpoint/base-URL format
-  and API version for the `openai` SDK; do not guess. Write the verified steps into `docs/setup-foundry.md`.
+  (never in chat). Docs were checked 2026-10-23 and the verified steps are in `docs/setup-foundry.md`: use
+  `OpenAI(base_url="https://<host>/openai/v1/", api_key=key or get_bearer_token_provider(DefaultAzureCredential(),
+  "https://ai.azure.com/.default"))`, no api-version; hosts `<r>.openai.azure.com` or `<r>.services.ai.azure.com`
+  (normalize FOUNDRY_ENDPOINT to scheme+host, then append /openai/v1/); structured outputs via
+  `client.beta.chat.completions.parse(..., response_format=PydanticModel)` or `response_format={"type":"json_schema",
+  "json_schema":{"name","strict":True,"schema"}}` (all fields required, additionalProperties false, no min/max/
+  pattern); MI role "Cognitive Services OpenAI User".
 - Step 10 (Phase 10, spec §8.3): `app/ai/foundry.py` `FoundryAIProvider` (openai SDK against the Foundry endpoint,
   structured output JSON schema for InsightDraft/RecapDraft, system prompt `app/ai/prompts/system.md` with the §8.3
   rules + "copy fact labels exactly; only cite event IDs from the FactPack", user message = FactPack JSON + mode,
