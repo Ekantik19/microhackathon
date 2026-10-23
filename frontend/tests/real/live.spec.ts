@@ -1,0 +1,66 @@
+import { expect, test, type Page } from "@playwright/test";
+
+const API = "http://localhost:8100";
+
+function trackErrors(page: Page): string[] {
+  const errors: string[] = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(e.message));
+  return errors;
+}
+
+const clockMinute = async (page: Page) => Number((await page.getByTestId("clock").textContent())!.slice(0, 2));
+
+test.beforeEach(async ({ request }) => {
+  await request.post(`${API}/matches/demo_01/simulation/reset`);
+});
+
+test("Start streams a live clock, score and stats from the backend", async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto("/match/demo_01");
+  await expect(page.getByTestId("ai-badge")).toHaveText("AI: Mock");
+  await expect(page.getByTestId("clock")).toHaveText(/^00:00/);
+  await expect(page.getByTestId("stats-rows")).toContainText("n/a");
+
+  await page.getByRole("button", { name: "Speed 60x" }).click();
+  await page.getByTestId("primary-control").click();
+  await expect(page.getByTestId("status-pill")).toHaveText(/Live replay/);
+  await expect.poll(() => clockMinute(page), { timeout: 15_000 }).toBeGreaterThanOrEqual(2);
+  await expect(page.getByTestId("stats-rows")).toContainText("%"); // possession is computed now
+  await expect(page.getByTestId("ball")).toBeVisible();
+
+  await page.getByTestId("primary-control").click();
+  await expect(page.getByTestId("status-pill")).toHaveText("Paused");
+  expect(errors).toEqual([]);
+});
+
+test("seek and timeline clicks rebuild the view; reset clears it", async ({ page, request }) => {
+  const errors = trackErrors(page);
+  await page.goto("/match/demo_01");
+  await expect(page.getByTestId("clock")).toHaveText(/^00:00/);
+
+  await request.post(`${API}/matches/demo_01/simulation/seek`, { data: { match_second: 2820 + 25 * 60 } }); // 70:00
+  await expect(page.getByTestId("score")).toContainText("1–1");
+  await expect(page.getByTestId("clock")).toHaveText(/^70:00/);
+
+  await page.getByRole("button", { name: /Goal: Andrei Kovalski/ }).click();
+  await expect(page.getByTestId("score")).toContainText("0–1");
+  await expect(page.getByTestId("clock")).toHaveText(/^23:/);
+  await expect(page.getByRole("button", { name: /Goal: Tomas Reyes/ })).toHaveCount(0); // no future on the timeline
+
+  await page.getByRole("button", { name: "Reset" }).click();
+  await expect(page.getByTestId("clock")).toHaveText(/^00:00/);
+  await expect(page.getByTestId("score")).toContainText("0–0");
+  expect(errors).toEqual([]);
+});
+
+test("the stream retries with backoff and resyncs when it comes back", async ({ page, request }) => {
+  await page.route("**/stream**", (route) => route.abort()); // the live stream is unreachable
+  await page.goto("/match/demo_01");
+  await expect(page.getByTestId("clock")).toHaveText(/^00:00/); // state still loads over REST
+  await expect(page.getByText("Live connection lost. Reconnecting…")).toBeVisible({ timeout: 10_000 });
+  await request.post(`${API}/matches/demo_01/simulation/seek`, { data: { match_second: 600 } }); // happens while down
+  await page.unroute("**/stream**");
+  await expect(page.getByText("Live connection lost. Reconnecting…")).toBeHidden({ timeout: 20_000 });
+  await expect(page.getByTestId("clock")).toHaveText(/^10:00/); // resynced from REST on reconnect
+});

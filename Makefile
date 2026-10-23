@@ -32,7 +32,7 @@ test-backend:
 	cd $(BACKEND) && uv run ruff check . && uv run ruff format --check . && uv run mypy app && uv run pytest -q
 
 test-frontend:
-	cd $(FRONTEND) && pnpm lint && pnpm typecheck && pnpm test:e2e
+	cd $(FRONTEND) && pnpm lint && pnpm typecheck && pnpm test:e2e && pnpm test:e2e:real
 
 lint:
 	cd $(BACKEND) && uv run ruff check . && uv run mypy app

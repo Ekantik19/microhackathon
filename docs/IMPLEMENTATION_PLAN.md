@@ -24,7 +24,8 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - The match metadata endpoint hides the final score and seed so the UI cannot show the future.
 - The mock data layer replays a recorded 63:30–70:30 slice of the real simulator (not the whole match) to keep the
   fixture small; its sample insights are written from the recorded stats and labeled Mock.
-- Status: phases 1–6 complete.
+- The UI also loads state over REST on mount, so it is useful even if the live stream is down.
+- Status: phases 1–7 complete.
 
 ## Blockers (need the human)
 

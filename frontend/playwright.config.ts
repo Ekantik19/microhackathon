@@ -4,7 +4,7 @@ const PORT = 3100;
 
 // Smoke tests run against the clearly-labeled mock data layer, so they need no backend.
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./tests/mock",
   timeout: 90_000,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
@@ -18,6 +18,6 @@ export default defineConfig({
     url: `http://localhost:${PORT}/match/demo_01`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    env: { NEXT_PUBLIC_USE_MOCK_API: "true" },
+    env: { NEXT_PUBLIC_USE_MOCK_API: "true", NEXT_DIST_DIR: ".next-e2e-mock" },
   },
 });

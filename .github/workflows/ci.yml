@@ -44,3 +44,30 @@ jobs:
       - run: pnpm test:e2e
         env:
           CI: "1"
+
+  e2e-real-api:
+    # Browser tests against the real FastAPI backend (mock AI, local synthetic events): no cloud needed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync
+        working-directory: backend
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: frontend
+      - run: pnpm test:e2e:real
+        working-directory: frontend
+        env:
+          CI: "1"

@@ -52,8 +52,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 4 | Phase 4: EventSource, simulator, event bus | ✅ done (commit `phase 4`) |
 | 5 | Phase 5: REST API + SSE | ✅ done (commit `phase 5`) |
 | 6 | Phase 6: frontend on mock data + Playwright smoke | ✅ done (commit `phase 6`) |
-| 7 | Phase 7: connect frontend to real API/SSE | ⏳ next |
-| 8 | Phase 8: pattern detectors + key moments | todo |
+| 7 | Phase 7: connect frontend to real API/SSE | ✅ done (commit `phase 7`) |
+| 8 | Phase 8: pattern detectors + key moments | ⏳ next |
 | 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | todo |
 | 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | waiting on human |
 | 10 | Phase 10: FoundryAIProvider, prompts, prewarm | todo |
@@ -111,14 +111,28 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   labels). Components: TopBar, Crest, Controls, Pitch, IntelStrip, Timeline, InsightFeed, StatsPanel, PlayerTable,
   RecapPanel, ApiBanner, MatchScreen. Playwright (`playwright.config.ts`, `tests/smoke.spec.ts`, desktop 1280 +
   Pixel 7, port 3100, mock mode) is in `make test` and CI. Screenshots reviewed at desktop and mobile.
+- Step 7 done: verified against the real backend (Start at 60x → live clock/score/stats; pause; reset; demo; timeline
+  click-to-seek; API killed → "Live connection lost" banner → API restarted → auto-recovery, no page errors).
+  `useMatch` now also resyncs over REST on mount (UI shows state even if SSE is down). `next.config.ts`
+  `distDir: NEXT_DIST_DIR || ".next"` so test servers (`.next-e2e-mock`, `.next-e2e-real`) run beside `make dev`.
+  Tests: `tests/mock/smoke.spec.ts` (`pnpm test:e2e`), `tests/real/live.spec.ts` + `playwright.real.config.ts`
+  (`pnpm test:e2e:real`: starts uvicorn :8100 + next dev :3200; live stream, seek/timeline/reset, stream retry +
+  resync via `page.route` abort). Both are in `make test`; CI has a new `e2e-real-api` job.
 
 ## Next steps
 
-- Step 7 (Phase 7): run `make dev` (real API, `NEXT_PUBLIC_USE_MOCK_API=false`) and verify in a browser (Playwright
-  script) that Start shows a live clock, score and stats from the backend; seek via timeline; reset; demo mode;
-  reconnect/resync after restarting the API (banner + backoff). Fix whatever breaks. Add a Playwright test against
-  the real backend (separate project or spec gated by env, e.g. `E2E_REAL_API=1`, with webServer starting uvicorn too)
-  and decide whether it joins `make test`. Check CORS for :3100 if used.
+- Step 8 (Phase 8, spec §8.1): `config/patterns.yaml` (thresholds, windows, cooldowns), `app/patterns/`
+  (`base.py` Detector protocol `evaluate(state, event) -> Detection | None` with plain-English docstrings;
+  `sustained_pressure.py`, `momentum_shift.py`, `high_press.py`, `key_moments.py` for goal / big_chance (xG ≥ 0.30,
+  not a goal) / card / half_time / full_time; `engine.py` runs all detectors per event, keeps cooldown state, resets
+  with the simulator; `report.py` CLI `python -m app.patterns.report demo_01`). `rule_strength` = average of each
+  metric's ratio to its threshold, capped at 1 (label "Signal strength (rule-based)"). Wire as a simulator hook via
+  `MatchRegistry.hook_factories` → store.add_detection + bus `detection`; clear on reset/seek (seek replays hooks with
+  replaying=True: rebuild detections silently). Tests: each detector fires/stays silent on fixtures, cooldowns,
+  storyline within ±2 min of scripted minutes (expect emergent momentum ~12' and ~44'), determinism. Keep per-event
+  cost low (detectors reuse one last_5 window computation; momentum needs prev window too). Re-measure demo wall time
+  (seeks replay hooks). Add `rule_strength` to timeline detection items if useful. Re-record the mock fixture later
+  (Step 9) so it uses real detections.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -183,7 +197,10 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   always attacks right (no end switch at half-time). The mock's "finished" means "Recording ended" (70:30), not FT.
   Team navy primary is too dark on the UI → always use `uiColor(team)` for bars/dots. Screenshot helper:
   `scratchpad/shots.mjs` (copy into frontend/ to run with node, since it imports @playwright/test).
-- Playwright uses port 3100 with its own `next dev`; with `make dev` also running, both share `frontend/.next`.
+- Ports: `make dev` = API 8000 + web 3000. Mock e2e = web 3100 (`.next-e2e-mock`). Real e2e = API 8100 + web 3200
+  (`.next-e2e-real`, CORS via `WEB_ORIGIN`). Only ONE `next dev` may run per distDir ("Another next dev server is
+  already running"). `next dev` rewrites tsconfig.json includes for each distDir; those entries are committed.
+- Chromium `context.setOffline` does not cut an open localhost EventSource; use `page.route(..., abort)` instead.
 
 ## Problems faced and solutions
 

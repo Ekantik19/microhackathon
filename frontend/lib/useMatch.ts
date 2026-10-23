@@ -213,12 +213,16 @@ export function useMatch(matchId: string, mode: Mode) {
     if (!api) return;
     let cancelled = false;
     Promise.all([api.match(matchId), api.health()])
-      .then(([info, health]) => !cancelled && dispatch({ type: "loaded", info, health }))
+      .then(([info, health]) => {
+        if (cancelled) return;
+        dispatch({ type: "loaded", info, health });
+        void resync(); // show the current state over REST even if the live stream is down
+      })
       .catch((e) => !cancelled && dispatch({ type: "error", message: e instanceof ApiError ? e.message : String(e) }));
     return () => {
       cancelled = true;
     };
-  }, [api, matchId, attempt]);
+  }, [api, matchId, attempt, resync]);
 
   // The live stream. Resync on every (re)connect, and after seek/reset (events_emitted jumps).
   useEffect(() => {
