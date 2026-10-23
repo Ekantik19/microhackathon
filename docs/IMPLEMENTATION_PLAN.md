@@ -19,7 +19,9 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - Python 3.12 from the system install is used by `uv` (no separate download).
 - Possession credits no team for the transition interval that ends in a change of possession (contested time).
 - Expected-stats checkpoints use the display clock: 45' = 2700 s (before 1st-half stoppage), 69' = 69:00.
-- Status: phases 1–3 complete.
+- Demo mode's last segment starts at 85:30 instead of 89' so the scripted 86' big chance is shown live.
+- Stoppages longer than 2 match-seconds are skipped during replay (the clock jumps forward).
+- Status: phases 1–4 complete.
 
 ## Blockers (need the human)
 

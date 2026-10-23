@@ -49,8 +49,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 🔐 A | Push to GitHub (`git push -u origin main`) so CI runs. Needs your GitHub auth | ✅ done: pushed, CI green on `286e040` |
 | 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ✅ done (commit `phase 2`) |
 | 3 | Phase 3: analytics engine + expected-stats script + tests | ✅ done (commit `phase 3`) |
-| 4 | Phase 4: EventSource, simulator, event bus | ⏳ next |
-| 5 | Phase 5: REST API + SSE | todo |
+| 4 | Phase 4: EventSource, simulator, event bus | ✅ done (commit `phase 4`) |
+| 5 | Phase 5: REST API + SSE | ⏳ next |
 | 6 | Phase 6: frontend on mock data + Playwright smoke | todo |
 | 7 | Phase 7: connect frontend to real API/SSE | todo |
 | 8 | Phase 8: pattern detectors + key moments | todo |
@@ -86,17 +86,25 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   `scripts/compute_expected_stats.py` (no app imports; per-second possession walk) →
   `data/matches/demo_01.expected_stats.json`. Tests: `test_analytics.py` (hand fixtures incl. 71/29),
   `test_expected_stats.py` (engine == script exactly; mutation-checked). 39 backend tests green.
+- Step 4 done: `app/events/sources.py` (`EventSource` Protocol, `LocalSyntheticEventSource`, `InMemoryEventSource`),
+  `app/events/catalog.py` (`list_match_ids`, `load_meta`), `app/services/bus.py` (`EventBus.publish/subscribe`,
+  bounded per-subscriber queues, drop-oldest), `app/services/payloads.py` (`stats_payload` = compact values, no
+  event IDs; `clock_fields`), `app/events/simulator.py` (`Simulator(meta, source, bus, hooks, tick, now, sleep)`:
+  `load`, `start(speed)`, `pause`, `resume`, `set_speed`, `reset`, `seek`, `advance(match_seconds)`,
+  `play_until`, `run_demo`, `snapshot`, `received`, `at(min, sec)`). Tests: `tests/unit/test_simulator.py`
+  (12) with `tests/fixtures/fake_clock.py`. 51 backend tests green (~8 s).
 
 ## Next steps
 
-- Step 4 (Phase 4, spec §7): `app/events/sources.py` (`EventSource` Protocol + `LocalSyntheticEventSource`
-  reading `data/matches/{id}.jsonl`; Fabric source comes in Step 11), `app/services/bus.py` (in-process async
-  pub/sub, topics event/stats/detection/insight_pending/insight/recap/sim_status), `app/events/simulator.py`
-  (buffers match, emits each event when the simulated clock reaches its match_second; start/pause/resume/
-  reset/set_speed(1|5|10|30|60)/seek; seek+reset rebuild MatchState; compress stoppages; deterministic;
-  stats computed synchronously per event and published; demo-mode sequence). Make the clock injectable
-  (fake clock / manual tick) so tests are fast and deterministic. Tests: ordered emission, speed scaling,
-  pause/resume, reset rebuilds state, deterministic replay, no duplicates, seek.
+- Step 5 (Phase 5, spec §9): `app/services/registry.py` (one Simulator per match, lazily loaded, held on
+  `app.state` via FastAPI lifespan), routers in `app/api/` (matches, simulation, stream, insights, recaps): GET
+  /matches, /matches/{id}, /state, /stats?window= (full metrics WITH event IDs + players), /timeline (key events
+  so far; detections empty until Step 8), /events?since_seq=&limit= (never future), /insights?mode= and /recaps
+  (empty lists until Step 9), SSE /stream?mode= (sse-starlette, all bus topics + heartbeat 15 s), POST
+  simulation start/pause/resume/reset/speed/seek/demo (demo runs as a background task), POST /generate-recap
+  (stub → 501-style error or empty until Step 9; decide). Errors `{error:{code,message}}`, 404 for unknown match,
+  422 for bad speed. httpx tests for every endpoint; SSE test receives ordered `event` + `stats` at 60x.
+  Update `/health` (`db` still n/a until Step 12).
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -137,6 +145,17 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   Metrics carry event_id lists, which are large for full-match possession: strip them for per-event SSE pushes.
 - `make generate-data` regenerates demo_01 **and** expected_stats.json. `test_committed_expected_stats_are_current`
   catches drift.
+- **Simulator contracts:** per emitted event: `state.ingest` → bus `event` (event JSON) → bus `stats`
+  (`stats_payload`) → `await hook(sim, event, replaying)`. Hooks run while the simulator lock is held: a hook must
+  NOT call simulator controls (deadlock); spawn background tasks instead. `seek` rebuilds state from scratch,
+  runs hooks with `replaying=True`, publishes only one `stats` + `sim_status` (clients should refetch on
+  sim_status). Status: idle → running ⇄ paused → finished; `start()` when finished resets first. Dead-ball gaps
+  > 2 match-seconds are skipped. `sim_status` payload = `snapshot()`.
+- Demo mode (`run_demo`) at 30x: 0'→3', seek 60'→70:30, seek 76'→80', seek **85:30**→FT (spec said 89'; moved
+  earlier so the 86' big chance streams live). ~40 s of wall time. Seeks will get slower once detectors run as
+  hooks in Step 8 (re-measure; keep demo < 90 s).
+- The bus drops the oldest message when a subscriber queue (default 2000) is full. Test subscribers that drain
+  only at the end need `EventBus(max_queue=100_000)`.
 
 ## Problems faced and solutions
 
