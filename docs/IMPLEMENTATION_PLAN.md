@@ -21,7 +21,8 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - Expected-stats checkpoints use the display clock: 45' = 2700 s (before 1st-half stoppage), 69' = 69:00.
 - Demo mode's last segment starts at 85:30 instead of 89' so the scripted 86' big chance is shown live.
 - Stoppages longer than 2 match-seconds are skipped during replay (the clock jumps forward).
-- Status: phases 1–4 complete.
+- The match metadata endpoint hides the final score and seed so the UI cannot show the future.
+- Status: phases 1–5 complete.
 
 ## Blockers (need the human)
 

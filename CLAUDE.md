@@ -50,8 +50,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ✅ done (commit `phase 2`) |
 | 3 | Phase 3: analytics engine + expected-stats script + tests | ✅ done (commit `phase 3`) |
 | 4 | Phase 4: EventSource, simulator, event bus | ✅ done (commit `phase 4`) |
-| 5 | Phase 5: REST API + SSE | ⏳ next |
-| 6 | Phase 6: frontend on mock data + Playwright smoke | todo |
+| 5 | Phase 5: REST API + SSE | ✅ done (commit `phase 5`) |
+| 6 | Phase 6: frontend on mock data + Playwright smoke | ⏳ next |
 | 7 | Phase 7: connect frontend to real API/SSE | todo |
 | 8 | Phase 8: pattern detectors + key moments | todo |
 | 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | todo |
@@ -93,18 +93,28 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   `load`, `start(speed)`, `pause`, `resume`, `set_speed`, `reset`, `seek`, `advance(match_seconds)`,
   `play_until`, `run_demo`, `snapshot`, `received`, `at(min, sec)`). Tests: `tests/unit/test_simulator.py`
   (12) with `tests/fixtures/fake_clock.py`. 51 backend tests green (~8 s).
+- Step 5 done: models `app/models/{api,detections,insights}.py` (Detection, Insight, Recap, SupportingStat,
+  ValidatorResult defined now so the API shape is stable). `app/services/store.py` (MatchStore: detections,
+  insights keyed (trigger_id, mode), recaps, `insight_cache` survives `clear_live`), `app/services/registry.py`
+  (MatchRegistry: lazy Simulator per match, `hook_factories` for later phases, demo task start/cancel),
+  `app/api/{deps,matches,simulation,insights,stream}.py`, `main.py` (state on `app.state`: settings, bus,
+  store, registry; lifespan shuts down sims). `/matches/{id}` omits `final_score` and `seed` (no spoilers).
+  `generate-recap` returns 503 `recap_unavailable` until `app.state.recap_generator` is set (Step 9). SSE sends a
+  `sim_status` snapshot on connect, filters insight/insight_pending/recap by `data["mode"]`, ping 15 s.
+  Tests: `tests/integration/test_api.py` (11), `test_sse.py` (real uvicorn on port 0). 62 backend tests green.
 
 ## Next steps
 
-- Step 5 (Phase 5, spec §9): `app/services/registry.py` (one Simulator per match, lazily loaded, held on
-  `app.state` via FastAPI lifespan), routers in `app/api/` (matches, simulation, stream, insights, recaps): GET
-  /matches, /matches/{id}, /state, /stats?window= (full metrics WITH event IDs + players), /timeline (key events
-  so far; detections empty until Step 8), /events?since_seq=&limit= (never future), /insights?mode= and /recaps
-  (empty lists until Step 9), SSE /stream?mode= (sse-starlette, all bus topics + heartbeat 15 s), POST
-  simulation start/pause/resume/reset/speed/seek/demo (demo runs as a background task), POST /generate-recap
-  (stub → 501-style error or empty until Step 9; decide). Errors `{error:{code,message}}`, 404 for unknown match,
-  422 for bad speed. httpx tests for every endpoint; SSE test receives ordered `event` + `stats` at 60x.
-  Update `/health` (`db` still n/a until Step 12).
+- Step 6 (Phase 6, spec §11): build every UI panel against a mock data layer `frontend/lib/mock/` that replays
+  a recorded SSE log (record one from the real API: seek/start at 60x and capture `/stream` + REST snapshots into
+  a JSON fixture), behind `NEXT_PUBLIC_USE_MOCK_API=true`. Panels: top bar (SVG crests from team colours, score,
+  clock mm:ss + period, status pill, AI badge, Synthetic badge), SVG pitch 105×68 (ball, fading trail of last 8,
+  shot markers sized by xG, goal pulse), live intelligence strip, insight feed (cards + Evidence expander +
+  skeleton), stats tabs Last 5/10/Full with paired bars + sortable player table, 0'–90' timeline, controls
+  (start/pause/resume/reset, speed segmented, Demo, Casual|Tactical toggle persisted in localStorage), recap
+  panel, footer. Dark broadcast style, responsive 1280→390 px. Add Playwright smoke test (mock mode) to
+  `make test`. Re-read Next.js 16 docs for client components before coding. Insight/recap mock data can be
+  hand-written for now (shape = backend `Insight`/`Recap` models).
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -156,6 +166,13 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   hooks in Step 8 (re-measure; keep demo < 90 s).
 - The bus drops the oldest message when a subscriber queue (default 2000) is full. Test subscribers that drain
   only at the end need `EventBus(max_queue=100_000)`.
+- **API contracts for the frontend:** SSE topics `event` (Event JSON), `stats` (`stats_payload`: clock_second,
+  minute, second, period, score, windows{last_5,last_10,full}{team}{metric: value}), `sim_status` (SimState),
+  later `detection`, `insight_pending`, `insight`, `recap` (have `mode`). REST: `/state` SimState, `/stats?window=`
+  full metrics with event_ids + players, `/timeline` items {kind,id,match_second,minute,second,period,type,
+  team_id,player_id,label}, `/events?since_seq&limit`, `/insights?mode=`, `/recaps`. Manual controls cancel a
+  running demo; `/demo` clears live store items and returns immediately.
+- httpx `ASGITransport` buffers whole responses: SSE tests must use a real uvicorn server (see test_sse.py).
 
 ## Problems faced and solutions
 
