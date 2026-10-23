@@ -5,14 +5,14 @@ FRONTEND := frontend
 # Export only NEXT_PUBLIC_* from .env to the frontend (the backend reads .env itself).
 NEXT_ENV := $(shell [ -f .env ] && grep -E '^NEXT_PUBLIC_[A-Z_]+=' .env | sed 's/[[:space:]]*\#.*//' | xargs)
 
-.PHONY: help install dev dev-api dev-web test test-backend test-frontend lint format generate-data prewarm docker-build
+.PHONY: help install dev dev-api dev-web test test-backend test-frontend lint format generate-data record-mock prewarm docker-build
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | cut -d: -f1
 
 install:
 	cd $(BACKEND) && uv sync
-	cd $(FRONTEND) && pnpm install
+	cd $(FRONTEND) && pnpm install && pnpm exec playwright install chromium
 
 dev:
 	@trap 'kill 0' INT TERM EXIT; \
@@ -32,7 +32,7 @@ test-backend:
 	cd $(BACKEND) && uv run ruff check . && uv run ruff format --check . && uv run mypy app && uv run pytest -q
 
 test-frontend:
-	cd $(FRONTEND) && pnpm lint && pnpm typecheck
+	cd $(FRONTEND) && pnpm lint && pnpm typecheck && pnpm test:e2e
 
 lint:
 	cd $(BACKEND) && uv run ruff check . && uv run mypy app
@@ -44,6 +44,9 @@ format:
 generate-data:
 	cd $(BACKEND) && uv run python -m app.events.generator --seed 42 --match-id demo_01
 	python3 scripts/compute_expected_stats.py --match-id demo_01
+
+record-mock:
+	cd $(BACKEND) && uv run python ../scripts/record_mock_stream.py
 
 prewarm:
 	cd $(BACKEND) && uv run python ../scripts/prewarm_insights.py

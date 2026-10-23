@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   output: "standalone",
+  devIndicators: false, // keeps demo recordings clean; errors still surface
   turbopack: {
     rules: {
       "*.css": {

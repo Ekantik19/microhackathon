@@ -22,7 +22,9 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - Demo mode's last segment starts at 85:30 instead of 89' so the scripted 86' big chance is shown live.
 - Stoppages longer than 2 match-seconds are skipped during replay (the clock jumps forward).
 - The match metadata endpoint hides the final score and seed so the UI cannot show the future.
-- Status: phases 1–5 complete.
+- The mock data layer replays a recorded 63:30–70:30 slice of the real simulator (not the whole match) to keep the
+  fixture small; its sample insights are written from the recorded stats and labeled Mock.
+- Status: phases 1–6 complete.
 
 ## Blockers (need the human)
 

@@ -51,8 +51,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 3 | Phase 3: analytics engine + expected-stats script + tests | ✅ done (commit `phase 3`) |
 | 4 | Phase 4: EventSource, simulator, event bus | ✅ done (commit `phase 4`) |
 | 5 | Phase 5: REST API + SSE | ✅ done (commit `phase 5`) |
-| 6 | Phase 6: frontend on mock data + Playwright smoke | ⏳ next |
-| 7 | Phase 7: connect frontend to real API/SSE | todo |
+| 6 | Phase 6: frontend on mock data + Playwright smoke | ✅ done (commit `phase 6`) |
+| 7 | Phase 7: connect frontend to real API/SSE | ⏳ next |
 | 8 | Phase 8: pattern detectors + key moments | todo |
 | 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | todo |
 | 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | waiting on human |
@@ -102,19 +102,23 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   `generate-recap` returns 503 `recap_unavailable` until `app.state.recap_generator` is set (Step 9). SSE sends a
   `sim_status` snapshot on connect, filters insight/insight_pending/recap by `data["mode"]`, ping 15 s.
   Tests: `tests/integration/test_api.py` (11), `test_sse.py` (real uvicorn on port 0). 62 backend tests green.
+- Step 6 done: frontend. `lib/types.ts` (mirrors backend models), `lib/api.ts` (`MatchApi` interface), `lib/realApi.ts`
+  (fetch + EventSource with exp. backoff 1→15 s), `lib/mock/mockApi.ts` + `lib/mock/recording.json` (408 KB, recorded
+  63:30–70:30 by `scripts/record_mock_stream.py` / `make record-mock`; sample insights/recap written from real stats,
+  `generated_by: mock`), `lib/client.ts` (`getApi()` picks mock iff `NEXT_PUBLIC_USE_MOCK_API=true`, lazy import),
+  `lib/useMatch.ts` (reducer over SSE topics; resync on open and when `sim_status.events_emitted` jumps),
+  `lib/useStoredMode.ts` (useSyncExternalStore over localStorage), `lib/format.ts` (`uiColor`, `toScreen`, clock,
+  labels). Components: TopBar, Crest, Controls, Pitch, IntelStrip, Timeline, InsightFeed, StatsPanel, PlayerTable,
+  RecapPanel, ApiBanner, MatchScreen. Playwright (`playwright.config.ts`, `tests/smoke.spec.ts`, desktop 1280 +
+  Pixel 7, port 3100, mock mode) is in `make test` and CI. Screenshots reviewed at desktop and mobile.
 
 ## Next steps
 
-- Step 6 (Phase 6, spec §11): build every UI panel against a mock data layer `frontend/lib/mock/` that replays
-  a recorded SSE log (record one from the real API: seek/start at 60x and capture `/stream` + REST snapshots into
-  a JSON fixture), behind `NEXT_PUBLIC_USE_MOCK_API=true`. Panels: top bar (SVG crests from team colours, score,
-  clock mm:ss + period, status pill, AI badge, Synthetic badge), SVG pitch 105×68 (ball, fading trail of last 8,
-  shot markers sized by xG, goal pulse), live intelligence strip, insight feed (cards + Evidence expander +
-  skeleton), stats tabs Last 5/10/Full with paired bars + sortable player table, 0'–90' timeline, controls
-  (start/pause/resume/reset, speed segmented, Demo, Casual|Tactical toggle persisted in localStorage), recap
-  panel, footer. Dark broadcast style, responsive 1280→390 px. Add Playwright smoke test (mock mode) to
-  `make test`. Re-read Next.js 16 docs for client components before coding. Insight/recap mock data can be
-  hand-written for now (shape = backend `Insight`/`Recap` models).
+- Step 7 (Phase 7): run `make dev` (real API, `NEXT_PUBLIC_USE_MOCK_API=false`) and verify in a browser (Playwright
+  script) that Start shows a live clock, score and stats from the backend; seek via timeline; reset; demo mode;
+  reconnect/resync after restarting the API (banner + backoff). Fix whatever breaks. Add a Playwright test against
+  the real backend (separate project or spec gated by env, e.g. `E2E_REAL_API=1`, with webServer starting uvicorn too)
+  and decide whether it joins `make test`. Check CORS for :3100 if used.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -173,6 +177,13 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   team_id,player_id,label}, `/events?since_seq&limit`, `/insights?mode=`, `/recaps`. Manual controls cancel a
   running demo; `/demo` clears live store items and returns immediately.
 - httpx `ASGITransport` buffers whole responses: SSE tests must use a real uvicorn server (see test_sse.py).
+- **Frontend gotchas:** a stale `frontend/.next` cache served OLD CSS (missing new Tailwind classes) → if styles look
+  wrong, `pkill -f "next dev"; rm -rf frontend/.next`. ESLint's react-hooks rule forbids setState directly in an
+  effect (use useSyncExternalStore / callbacks). `devIndicators: false` in next.config. On screen the home team
+  always attacks right (no end switch at half-time). The mock's "finished" means "Recording ended" (70:30), not FT.
+  Team navy primary is too dark on the UI → always use `uiColor(team)` for bars/dots. Screenshot helper:
+  `scratchpad/shots.mjs` (copy into frontend/ to run with node, since it imports @playwright/test).
+- Playwright uses port 3100 with its own `next dev`; with `make dev` also running, both share `frontend/.next`.
 
 ## Problems faced and solutions
 
