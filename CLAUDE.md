@@ -46,7 +46,7 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 |---|---|---|
 | 0 | Inspect, PRD → `docs/PRD.md`, plan, CLAUDE.md | ✅ done |
 | 1 | Phase 1: repo scaffold, Makefile, `.env.example`, CI, FastAPI `/health`, Next.js shell | ✅ done (commit `phase 1`) |
-| 🔐 A | Push to GitHub (`git push -u origin main`) so CI runs. Needs your GitHub auth | waiting on human |
+| 🔐 A | Push to GitHub (`git push -u origin main`) so CI runs. Needs your GitHub auth | ✅ done: pushed, CI green on `286e040` |
 | 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ✅ done (commit `phase 2`) |
 | 3 | Phase 3: analytics engine + expected-stats script + tests | ⏳ next |
 | 4 | Phase 4: EventSource, simulator, event bus | todo |
@@ -88,7 +88,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   independent) → `data/matches/demo_01.expected_stats.json` at 15', 45', 69', 90'. Tests: hand fixtures incl.
   71/29 worked example, duplicates, reset, goal not double-counted, pass accuracy None, window boundaries,
   fast engine == expected stats exactly.
-- 🔐 A can happen any time: `cd microhackathon && git push -u origin main`.
+- After each step's commit, the human pushes; CI status can be checked without `gh` via
+  `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
 ## Important things to keep in mind
 
