@@ -48,8 +48,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 1 | Phase 1: repo scaffold, Makefile, `.env.example`, CI, FastAPI `/health`, Next.js shell | ✅ done (commit `phase 1`) |
 | 🔐 A | Push to GitHub (`git push -u origin main`) so CI runs. Needs your GitHub auth | ✅ done: pushed, CI green on `286e040` |
 | 2 | Phase 2: event schema, seeded generator, demo_01 files, storyline | ✅ done (commit `phase 2`) |
-| 3 | Phase 3: analytics engine + expected-stats script + tests | ⏳ next |
-| 4 | Phase 4: EventSource, simulator, event bus | todo |
+| 3 | Phase 3: analytics engine + expected-stats script + tests | ✅ done (commit `phase 3`) |
+| 4 | Phase 4: EventSource, simulator, event bus | ⏳ next |
 | 5 | Phase 5: REST API + SSE | todo |
 | 6 | Phase 6: frontend on mock data + Playwright smoke | todo |
 | 7 | Phase 7: connect frontend to real API/SSE | todo |
@@ -79,15 +79,24 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   (1959 events, 1–1), `demo_01.meta.json`, `demo_01.storyline.md`, `data/schema/event.schema.json`.
   `tests/unit/test_generator.py` (13 tests: determinism, committed file == generator output, ordering, clock,
   goal→shot links, storyline beats, xG formula, squads, schema current). 15 backend tests green.
+- Step 3 done: `app/models/stats.py` (Metric{value,event_ids}, TeamStats, PlayerStats, WindowStats),
+  `app/analytics/` (definitions, possession, shots, passing, territory, players, score, windows, context, state).
+  `MatchState(match_id, teams)`: `ingest()` (False on duplicate/other match, handles out-of-order seq),
+  `reset()`, `advance_clock()`, `score()`, `window(name, with_players)`, `windows()`. `docs/metrics.md`.
+  `scripts/compute_expected_stats.py` (no app imports; per-second possession walk) →
+  `data/matches/demo_01.expected_stats.json`. Tests: `test_analytics.py` (hand fixtures incl. 71/29),
+  `test_expected_stats.py` (engine == script exactly; mutation-checked). 39 backend tests green.
 
 ## Next steps
 
-- Step 3 (Phase 3, spec §6): `backend/app/analytics/` pure functions (definitions, possession, shots, passing,
-  territory, players, score, windows, context, state=MatchState incremental + idempotent + reset), every metric
-  returns value + contributing event IDs. `docs/metrics.md`. `scripts/compute_expected_stats.py` (slow,
-  independent) → `data/matches/demo_01.expected_stats.json` at 15', 45', 69', 90'. Tests: hand fixtures incl.
-  71/29 worked example, duplicates, reset, goal not double-counted, pass accuracy None, window boundaries,
-  fast engine == expected stats exactly.
+- Step 4 (Phase 4, spec §7): `app/events/sources.py` (`EventSource` Protocol + `LocalSyntheticEventSource`
+  reading `data/matches/{id}.jsonl`; Fabric source comes in Step 11), `app/services/bus.py` (in-process async
+  pub/sub, topics event/stats/detection/insight_pending/insight/recap/sim_status), `app/events/simulator.py`
+  (buffers match, emits each event when the simulated clock reaches its match_second; start/pause/resume/
+  reset/set_speed(1|5|10|30|60)/seek; seek+reset rebuild MatchState; compress stoppages; deterministic;
+  stats computed synchronously per event and published; demo-mode sequence). Make the clock injectable
+  (fake clock / manual tick) so tests are fast and deterministic. Tests: ordered emission, speed scaling,
+  pause/resume, reset rebuilds state, deterministic replay, no duplicates, seek.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -121,6 +130,13 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   momentum → RVA ~77:50; **emergent** momentum → RVA at ~12:38 and ~44:29 (documented in storyline.md). Re-verify
   with the real detectors in Step 8; retune `SEGMENTS` only if needed.
 - Shell gotcha: a `python3 - <<EOF` heredoc followed by a newline does NOT gate later commands; chain with `&&`.
+- **Analytics contracts:** windows are (t0, t1] (exclusive start, inclusive end); percentages are whole numbers
+  rounded half up, `None` when the denominator is 0; possession excludes the transition interval that ends in a
+  change of possession. Functions take events in seq order, only those received (≤ clock). `window_stats(...,
+  with_players=False)` is the cheap per-event path (avg 1.7 ms, worst 3.2 ms on demo_01; with players ~8 ms).
+  Metrics carry event_id lists, which are large for full-match possession: strip them for per-event SSE pushes.
+- `make generate-data` regenerates demo_01 **and** expected_stats.json. `test_committed_expected_stats_are_current`
+  catches drift.
 
 ## Problems faced and solutions
 

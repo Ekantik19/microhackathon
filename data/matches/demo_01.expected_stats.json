@@ -1,0 +1,1342 @@
+{
+  "match_id": "demo_01",
+  "definitions": "docs/metrics.md",
+  "checkpoints": {
+    "15'": {
+      "clock_second": 900,
+      "score": {
+        "NBR": 0,
+        "RVA": 0
+      },
+      "windows": {
+        "last_5": {
+          "NBR": {
+            "possession_seconds": 68,
+            "possession_pct": 44,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 28,
+            "passes_completed": 22,
+            "pass_accuracy": 79,
+            "final_third_entries": 0,
+            "high_recoveries": 0,
+            "recoveries": 6
+          },
+          "RVA": {
+            "possession_seconds": 86,
+            "possession_pct": 56,
+            "shots": 2,
+            "shots_on_target": 0,
+            "xg": 0.05,
+            "passes_attempted": 36,
+            "passes_completed": 32,
+            "pass_accuracy": 89,
+            "final_third_entries": 7,
+            "high_recoveries": 0,
+            "recoveries": 5
+          }
+        },
+        "last_10": {
+          "NBR": {
+            "possession_seconds": 124,
+            "possession_pct": 40,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 57,
+            "passes_completed": 42,
+            "pass_accuracy": 74,
+            "final_third_entries": 3,
+            "high_recoveries": 0,
+            "recoveries": 10
+          },
+          "RVA": {
+            "possession_seconds": 183,
+            "possession_pct": 60,
+            "shots": 2,
+            "shots_on_target": 0,
+            "xg": 0.05,
+            "passes_attempted": 78,
+            "passes_completed": 68,
+            "pass_accuracy": 87,
+            "final_third_entries": 8,
+            "high_recoveries": 0,
+            "recoveries": 17
+          }
+        },
+        "full": {
+          "NBR": {
+            "possession_seconds": 185,
+            "possession_pct": 44,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 82,
+            "passes_completed": 61,
+            "pass_accuracy": 74,
+            "final_third_entries": 5,
+            "high_recoveries": 0,
+            "recoveries": 16
+          },
+          "RVA": {
+            "possession_seconds": 238,
+            "possession_pct": 56,
+            "shots": 2,
+            "shots_on_target": 0,
+            "xg": 0.05,
+            "passes_attempted": 102,
+            "passes_completed": 87,
+            "pass_accuracy": 85,
+            "final_third_entries": 10,
+            "high_recoveries": 0,
+            "recoveries": 22
+          }
+        }
+      },
+      "players_full": {
+        "NBR": {
+          "NBR_02": {
+            "involvement": 10,
+            "passes_attempted": 6,
+            "passes_completed": 3,
+            "pass_accuracy": 50,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 0
+          },
+          "NBR_03": {
+            "involvement": 15,
+            "passes_attempted": 5,
+            "passes_completed": 4,
+            "pass_accuracy": 80,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 1
+          },
+          "NBR_04": {
+            "involvement": 11,
+            "passes_attempted": 9,
+            "passes_completed": 8,
+            "pass_accuracy": 89,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 0
+          },
+          "NBR_05": {
+            "involvement": 12,
+            "passes_attempted": 9,
+            "passes_completed": 8,
+            "pass_accuracy": 89,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 0
+          },
+          "NBR_06": {
+            "involvement": 7,
+            "passes_attempted": 6,
+            "passes_completed": 6,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 1
+          },
+          "NBR_07": {
+            "involvement": 7,
+            "passes_attempted": 4,
+            "passes_completed": 2,
+            "pass_accuracy": 50,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 1
+          },
+          "NBR_08": {
+            "involvement": 27,
+            "passes_attempted": 14,
+            "passes_completed": 11,
+            "pass_accuracy": 79,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 1
+          },
+          "NBR_09": {
+            "involvement": 11,
+            "passes_attempted": 8,
+            "passes_completed": 2,
+            "pass_accuracy": 25,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 0
+          },
+          "NBR_10": {
+            "involvement": 21,
+            "passes_attempted": 12,
+            "passes_completed": 12,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 1
+          },
+          "NBR_11": {
+            "involvement": 10,
+            "passes_attempted": 9,
+            "passes_completed": 5,
+            "pass_accuracy": 56,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 0
+          }
+        },
+        "RVA": {
+          "RVA_02": {
+            "involvement": 16,
+            "passes_attempted": 10,
+            "passes_completed": 10,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 5,
+            "final_third_entries": 1
+          },
+          "RVA_03": {
+            "involvement": 10,
+            "passes_attempted": 8,
+            "passes_completed": 6,
+            "pass_accuracy": 75,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 1
+          },
+          "RVA_04": {
+            "involvement": 20,
+            "passes_attempted": 13,
+            "passes_completed": 11,
+            "pass_accuracy": 85,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 4,
+            "final_third_entries": 0
+          },
+          "RVA_05": {
+            "involvement": 15,
+            "passes_attempted": 10,
+            "passes_completed": 10,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 1
+          },
+          "RVA_06": {
+            "involvement": 20,
+            "passes_attempted": 12,
+            "passes_completed": 9,
+            "pass_accuracy": 75,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 2,
+            "final_third_entries": 1
+          },
+          "RVA_07": {
+            "involvement": 9,
+            "passes_attempted": 6,
+            "passes_completed": 3,
+            "pass_accuracy": 50,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 0,
+            "final_third_entries": 0
+          },
+          "RVA_08": {
+            "involvement": 18,
+            "passes_attempted": 15,
+            "passes_completed": 14,
+            "pass_accuracy": 93,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 2,
+            "final_third_entries": 2
+          },
+          "RVA_09": {
+            "involvement": 7,
+            "passes_attempted": 4,
+            "passes_completed": 2,
+            "pass_accuracy": 50,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 0
+          },
+          "RVA_10": {
+            "involvement": 22,
+            "passes_attempted": 13,
+            "passes_completed": 12,
+            "pass_accuracy": 92,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 2
+          },
+          "RVA_11": {
+            "involvement": 14,
+            "passes_attempted": 11,
+            "passes_completed": 10,
+            "pass_accuracy": 91,
+            "shots": 1,
+            "xg": 0.03,
+            "recoveries": 1,
+            "final_third_entries": 2
+          }
+        }
+      }
+    },
+    "45'": {
+      "clock_second": 2700,
+      "score": {
+        "NBR": 0,
+        "RVA": 1
+      },
+      "windows": {
+        "last_5": {
+          "NBR": {
+            "possession_seconds": 119,
+            "possession_pct": 79,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 13,
+            "passes_completed": 11,
+            "pass_accuracy": 85,
+            "final_third_entries": 0,
+            "high_recoveries": 0,
+            "recoveries": 7
+          },
+          "RVA": {
+            "possession_seconds": 31,
+            "possession_pct": 21,
+            "shots": 1,
+            "shots_on_target": 0,
+            "xg": 0.12,
+            "passes_attempted": 17,
+            "passes_completed": 10,
+            "pass_accuracy": 59,
+            "final_third_entries": 1,
+            "high_recoveries": 4,
+            "recoveries": 4
+          }
+        },
+        "last_10": {
+          "NBR": {
+            "possession_seconds": 163,
+            "possession_pct": 60,
+            "shots": 1,
+            "shots_on_target": 0,
+            "xg": 0.04,
+            "passes_attempted": 29,
+            "passes_completed": 24,
+            "pass_accuracy": 83,
+            "final_third_entries": 1,
+            "high_recoveries": 0,
+            "recoveries": 11
+          },
+          "RVA": {
+            "possession_seconds": 109,
+            "possession_pct": 40,
+            "shots": 1,
+            "shots_on_target": 0,
+            "xg": 0.12,
+            "passes_attempted": 40,
+            "passes_completed": 32,
+            "pass_accuracy": 80,
+            "final_third_entries": 5,
+            "high_recoveries": 4,
+            "recoveries": 9
+          }
+        },
+        "full": {
+          "NBR": {
+            "possession_seconds": 619,
+            "possession_pct": 50,
+            "shots": 1,
+            "shots_on_target": 0,
+            "xg": 0.04,
+            "passes_attempted": 215,
+            "passes_completed": 169,
+            "pass_accuracy": 79,
+            "final_third_entries": 18,
+            "high_recoveries": 0,
+            "recoveries": 57
+          },
+          "RVA": {
+            "possession_seconds": 619,
+            "possession_pct": 50,
+            "shots": 4,
+            "shots_on_target": 1,
+            "xg": 0.36,
+            "passes_attempted": 252,
+            "passes_completed": 202,
+            "pass_accuracy": 80,
+            "final_third_entries": 25,
+            "high_recoveries": 5,
+            "recoveries": 59
+          }
+        }
+      },
+      "players_full": {
+        "NBR": {
+          "NBR_01": {
+            "involvement": 3,
+            "passes_attempted": 0,
+            "passes_completed": 0,
+            "pass_accuracy": null,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 0
+          },
+          "NBR_02": {
+            "involvement": 32,
+            "passes_attempted": 19,
+            "passes_completed": 14,
+            "pass_accuracy": 74,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 8,
+            "final_third_entries": 0
+          },
+          "NBR_03": {
+            "involvement": 37,
+            "passes_attempted": 18,
+            "passes_completed": 14,
+            "pass_accuracy": 78,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 5,
+            "final_third_entries": 2
+          },
+          "NBR_04": {
+            "involvement": 33,
+            "passes_attempted": 23,
+            "passes_completed": 21,
+            "pass_accuracy": 91,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 2,
+            "final_third_entries": 0
+          },
+          "NBR_05": {
+            "involvement": 41,
+            "passes_attempted": 22,
+            "passes_completed": 21,
+            "pass_accuracy": 95,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 9,
+            "final_third_entries": 0
+          },
+          "NBR_06": {
+            "involvement": 34,
+            "passes_attempted": 25,
+            "passes_completed": 20,
+            "pass_accuracy": 80,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 5,
+            "final_third_entries": 6
+          },
+          "NBR_07": {
+            "involvement": 23,
+            "passes_attempted": 11,
+            "passes_completed": 8,
+            "pass_accuracy": 73,
+            "shots": 1,
+            "xg": 0.04,
+            "recoveries": 3,
+            "final_third_entries": 3
+          },
+          "NBR_08": {
+            "involvement": 58,
+            "passes_attempted": 33,
+            "passes_completed": 25,
+            "pass_accuracy": 76,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 9,
+            "final_third_entries": 1
+          },
+          "NBR_09": {
+            "involvement": 27,
+            "passes_attempted": 19,
+            "passes_completed": 10,
+            "pass_accuracy": 53,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 1
+          },
+          "NBR_10": {
+            "involvement": 54,
+            "passes_attempted": 27,
+            "passes_completed": 25,
+            "pass_accuracy": 93,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 10,
+            "final_third_entries": 3
+          },
+          "NBR_11": {
+            "involvement": 23,
+            "passes_attempted": 18,
+            "passes_completed": 11,
+            "pass_accuracy": 61,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 2
+          }
+        },
+        "RVA": {
+          "RVA_02": {
+            "involvement": 39,
+            "passes_attempted": 26,
+            "passes_completed": 26,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 8,
+            "final_third_entries": 3
+          },
+          "RVA_03": {
+            "involvement": 27,
+            "passes_attempted": 18,
+            "passes_completed": 16,
+            "pass_accuracy": 89,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 5,
+            "final_third_entries": 1
+          },
+          "RVA_04": {
+            "involvement": 54,
+            "passes_attempted": 38,
+            "passes_completed": 29,
+            "pass_accuracy": 76,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 8,
+            "final_third_entries": 2
+          },
+          "RVA_05": {
+            "involvement": 35,
+            "passes_attempted": 22,
+            "passes_completed": 19,
+            "pass_accuracy": 86,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 5,
+            "final_third_entries": 2
+          },
+          "RVA_06": {
+            "involvement": 36,
+            "passes_attempted": 20,
+            "passes_completed": 16,
+            "pass_accuracy": 80,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 4,
+            "final_third_entries": 2
+          },
+          "RVA_07": {
+            "involvement": 31,
+            "passes_attempted": 21,
+            "passes_completed": 10,
+            "pass_accuracy": 48,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 4,
+            "final_third_entries": 0
+          },
+          "RVA_08": {
+            "involvement": 62,
+            "passes_attempted": 37,
+            "passes_completed": 31,
+            "pass_accuracy": 84,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 9,
+            "final_third_entries": 7
+          },
+          "RVA_09": {
+            "involvement": 24,
+            "passes_attempted": 15,
+            "passes_completed": 7,
+            "pass_accuracy": 47,
+            "shots": 2,
+            "xg": 0.31,
+            "recoveries": 2,
+            "final_third_entries": 0
+          },
+          "RVA_10": {
+            "involvement": 54,
+            "passes_attempted": 32,
+            "passes_completed": 30,
+            "pass_accuracy": 94,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 9,
+            "final_third_entries": 5
+          },
+          "RVA_11": {
+            "involvement": 33,
+            "passes_attempted": 23,
+            "passes_completed": 18,
+            "pass_accuracy": 78,
+            "shots": 1,
+            "xg": 0.03,
+            "recoveries": 5,
+            "final_third_entries": 3
+          }
+        }
+      }
+    },
+    "69'": {
+      "clock_second": 4260,
+      "score": {
+        "NBR": 0,
+        "RVA": 1
+      },
+      "windows": {
+        "last_5": {
+          "NBR": {
+            "possession_seconds": 93,
+            "possession_pct": 73,
+            "shots": 3,
+            "shots_on_target": 2,
+            "xg": 0.3,
+            "passes_attempted": 23,
+            "passes_completed": 19,
+            "pass_accuracy": 83,
+            "final_third_entries": 4,
+            "high_recoveries": 1,
+            "recoveries": 3
+          },
+          "RVA": {
+            "possession_seconds": 35,
+            "possession_pct": 27,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 12,
+            "passes_completed": 11,
+            "pass_accuracy": 92,
+            "final_third_entries": 0,
+            "high_recoveries": 0,
+            "recoveries": 7
+          }
+        },
+        "last_10": {
+          "NBR": {
+            "possession_seconds": 181,
+            "possession_pct": 67,
+            "shots": 4,
+            "shots_on_target": 2,
+            "xg": 0.32,
+            "passes_attempted": 48,
+            "passes_completed": 41,
+            "pass_accuracy": 85,
+            "final_third_entries": 8,
+            "high_recoveries": 1,
+            "recoveries": 7
+          },
+          "RVA": {
+            "possession_seconds": 89,
+            "possession_pct": 33,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 29,
+            "passes_completed": 26,
+            "pass_accuracy": 90,
+            "final_third_entries": 1,
+            "high_recoveries": 0,
+            "recoveries": 14
+          }
+        },
+        "full": {
+          "NBR": {
+            "possession_seconds": 1034,
+            "possession_pct": 53,
+            "shots": 7,
+            "shots_on_target": 2,
+            "xg": 0.67,
+            "passes_attempted": 343,
+            "passes_completed": 279,
+            "pass_accuracy": 81,
+            "final_third_entries": 31,
+            "high_recoveries": 2,
+            "recoveries": 77
+          },
+          "RVA": {
+            "possession_seconds": 905,
+            "possession_pct": 47,
+            "shots": 5,
+            "shots_on_target": 2,
+            "xg": 0.44,
+            "passes_attempted": 365,
+            "passes_completed": 300,
+            "pass_accuracy": 82,
+            "final_third_entries": 33,
+            "high_recoveries": 5,
+            "recoveries": 94
+          }
+        }
+      },
+      "players_full": {
+        "NBR": {
+          "NBR_01": {
+            "involvement": 4,
+            "passes_attempted": 0,
+            "passes_completed": 0,
+            "pass_accuracy": null,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 4,
+            "final_third_entries": 0
+          },
+          "NBR_02": {
+            "involvement": 43,
+            "passes_attempted": 27,
+            "passes_completed": 20,
+            "pass_accuracy": 74,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 10,
+            "final_third_entries": 0
+          },
+          "NBR_03": {
+            "involvement": 52,
+            "passes_attempted": 27,
+            "passes_completed": 22,
+            "pass_accuracy": 81,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 2
+          },
+          "NBR_04": {
+            "involvement": 54,
+            "passes_attempted": 35,
+            "passes_completed": 33,
+            "pass_accuracy": 94,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 4,
+            "final_third_entries": 2
+          },
+          "NBR_05": {
+            "involvement": 59,
+            "passes_attempted": 33,
+            "passes_completed": 29,
+            "pass_accuracy": 88,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 13,
+            "final_third_entries": 0
+          },
+          "NBR_06": {
+            "involvement": 52,
+            "passes_attempted": 38,
+            "passes_completed": 33,
+            "pass_accuracy": 87,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 6
+          },
+          "NBR_07": {
+            "involvement": 37,
+            "passes_attempted": 21,
+            "passes_completed": 18,
+            "pass_accuracy": 86,
+            "shots": 1,
+            "xg": 0.04,
+            "recoveries": 3,
+            "final_third_entries": 3
+          },
+          "NBR_08": {
+            "involvement": 75,
+            "passes_attempted": 41,
+            "passes_completed": 31,
+            "pass_accuracy": 76,
+            "shots": 1,
+            "xg": 0.27,
+            "recoveries": 11,
+            "final_third_entries": 1
+          },
+          "NBR_09": {
+            "involvement": 55,
+            "passes_attempted": 36,
+            "passes_completed": 23,
+            "pass_accuracy": 64,
+            "shots": 2,
+            "xg": 0.24,
+            "recoveries": 5,
+            "final_third_entries": 1
+          },
+          "NBR_10": {
+            "involvement": 93,
+            "passes_attempted": 52,
+            "passes_completed": 47,
+            "pass_accuracy": 90,
+            "shots": 1,
+            "xg": 0.06,
+            "recoveries": 13,
+            "final_third_entries": 9
+          },
+          "NBR_11": {
+            "involvement": 33,
+            "passes_attempted": 23,
+            "passes_completed": 16,
+            "pass_accuracy": 70,
+            "shots": 1,
+            "xg": 0.04,
+            "recoveries": 2,
+            "final_third_entries": 3
+          },
+          "NBR_14": {
+            "involvement": 6,
+            "passes_attempted": 5,
+            "passes_completed": 5,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 3
+          },
+          "NBR_17": {
+            "involvement": 8,
+            "passes_attempted": 5,
+            "passes_completed": 2,
+            "pass_accuracy": 40,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 0,
+            "final_third_entries": 1
+          }
+        },
+        "RVA": {
+          "RVA_01": {
+            "involvement": 3,
+            "passes_attempted": 1,
+            "passes_completed": 1,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 2,
+            "final_third_entries": 0
+          },
+          "RVA_02": {
+            "involvement": 60,
+            "passes_attempted": 34,
+            "passes_completed": 33,
+            "pass_accuracy": 97,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 17,
+            "final_third_entries": 3
+          },
+          "RVA_03": {
+            "involvement": 42,
+            "passes_attempted": 28,
+            "passes_completed": 25,
+            "pass_accuracy": 89,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 8,
+            "final_third_entries": 2
+          },
+          "RVA_04": {
+            "involvement": 72,
+            "passes_attempted": 50,
+            "passes_completed": 40,
+            "pass_accuracy": 80,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 11,
+            "final_third_entries": 4
+          },
+          "RVA_05": {
+            "involvement": 50,
+            "passes_attempted": 30,
+            "passes_completed": 26,
+            "pass_accuracy": 87,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 10,
+            "final_third_entries": 2
+          },
+          "RVA_06": {
+            "involvement": 57,
+            "passes_attempted": 34,
+            "passes_completed": 30,
+            "pass_accuracy": 88,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 3
+          },
+          "RVA_07": {
+            "involvement": 47,
+            "passes_attempted": 31,
+            "passes_completed": 19,
+            "pass_accuracy": 61,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 4,
+            "final_third_entries": 2
+          },
+          "RVA_08": {
+            "involvement": 97,
+            "passes_attempted": 65,
+            "passes_completed": 54,
+            "pass_accuracy": 83,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 11,
+            "final_third_entries": 9
+          },
+          "RVA_09": {
+            "involvement": 40,
+            "passes_attempted": 23,
+            "passes_completed": 14,
+            "pass_accuracy": 61,
+            "shots": 3,
+            "xg": 0.39,
+            "recoveries": 5,
+            "final_third_entries": 0
+          },
+          "RVA_10": {
+            "involvement": 73,
+            "passes_attempted": 43,
+            "passes_completed": 38,
+            "pass_accuracy": 88,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 13,
+            "final_third_entries": 5
+          },
+          "RVA_11": {
+            "involvement": 41,
+            "passes_attempted": 26,
+            "passes_completed": 20,
+            "pass_accuracy": 77,
+            "shots": 1,
+            "xg": 0.03,
+            "recoveries": 7,
+            "final_third_entries": 3
+          },
+          "RVA_18": {
+            "involvement": 0,
+            "passes_attempted": 0,
+            "passes_completed": 0,
+            "pass_accuracy": null,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 0,
+            "final_third_entries": 0
+          }
+        }
+      }
+    },
+    "90'": {
+      "clock_second": 5520,
+      "score": {
+        "NBR": 1,
+        "RVA": 1
+      },
+      "windows": {
+        "last_5": {
+          "NBR": {
+            "possession_seconds": 78,
+            "possession_pct": 60,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 28,
+            "passes_completed": 27,
+            "pass_accuracy": 96,
+            "final_third_entries": 1,
+            "high_recoveries": 0,
+            "recoveries": 7
+          },
+          "RVA": {
+            "possession_seconds": 51,
+            "possession_pct": 40,
+            "shots": 2,
+            "shots_on_target": 1,
+            "xg": 0.6,
+            "passes_attempted": 18,
+            "passes_completed": 12,
+            "pass_accuracy": 67,
+            "final_third_entries": 1,
+            "high_recoveries": 0,
+            "recoveries": 2
+          }
+        },
+        "last_10": {
+          "NBR": {
+            "possession_seconds": 121,
+            "possession_pct": 53,
+            "shots": 0,
+            "shots_on_target": 0,
+            "xg": 0.0,
+            "passes_attempted": 46,
+            "passes_completed": 41,
+            "pass_accuracy": 89,
+            "final_third_entries": 3,
+            "high_recoveries": 0,
+            "recoveries": 13
+          },
+          "RVA": {
+            "possession_seconds": 109,
+            "possession_pct": 47,
+            "shots": 2,
+            "shots_on_target": 1,
+            "xg": 0.6,
+            "passes_attempted": 50,
+            "passes_completed": 39,
+            "pass_accuracy": 78,
+            "final_third_entries": 5,
+            "high_recoveries": 0,
+            "recoveries": 6
+          }
+        },
+        "full": {
+          "NBR": {
+            "possession_seconds": 1247,
+            "possession_pct": 52,
+            "shots": 8,
+            "shots_on_target": 3,
+            "xg": 0.89,
+            "passes_attempted": 427,
+            "passes_completed": 351,
+            "pass_accuracy": 82,
+            "final_third_entries": 35,
+            "high_recoveries": 2,
+            "recoveries": 99
+          },
+          "RVA": {
+            "possession_seconds": 1152,
+            "possession_pct": 48,
+            "shots": 9,
+            "shots_on_target": 4,
+            "xg": 1.19,
+            "passes_attempted": 457,
+            "passes_completed": 376,
+            "pass_accuracy": 82,
+            "final_third_entries": 41,
+            "high_recoveries": 7,
+            "recoveries": 109
+          }
+        }
+      },
+      "players_full": {
+        "NBR": {
+          "NBR_01": {
+            "involvement": 6,
+            "passes_attempted": 0,
+            "passes_completed": 0,
+            "pass_accuracy": null,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 0
+          },
+          "NBR_02": {
+            "involvement": 51,
+            "passes_attempted": 33,
+            "passes_completed": 26,
+            "pass_accuracy": 79,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 10,
+            "final_third_entries": 1
+          },
+          "NBR_03": {
+            "involvement": 73,
+            "passes_attempted": 40,
+            "passes_completed": 33,
+            "pass_accuracy": 83,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 12,
+            "final_third_entries": 2
+          },
+          "NBR_04": {
+            "involvement": 62,
+            "passes_attempted": 39,
+            "passes_completed": 37,
+            "pass_accuracy": 95,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 3
+          },
+          "NBR_05": {
+            "involvement": 76,
+            "passes_attempted": 46,
+            "passes_completed": 39,
+            "pass_accuracy": 85,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 13,
+            "final_third_entries": 0
+          },
+          "NBR_06": {
+            "involvement": 60,
+            "passes_attempted": 46,
+            "passes_completed": 40,
+            "pass_accuracy": 87,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 6
+          },
+          "NBR_07": {
+            "involvement": 43,
+            "passes_attempted": 24,
+            "passes_completed": 19,
+            "pass_accuracy": 79,
+            "shots": 1,
+            "xg": 0.04,
+            "recoveries": 4,
+            "final_third_entries": 4
+          },
+          "NBR_08": {
+            "involvement": 75,
+            "passes_attempted": 41,
+            "passes_completed": 31,
+            "pass_accuracy": 76,
+            "shots": 1,
+            "xg": 0.27,
+            "recoveries": 11,
+            "final_third_entries": 1
+          },
+          "NBR_09": {
+            "involvement": 63,
+            "passes_attempted": 40,
+            "passes_completed": 27,
+            "pass_accuracy": 68,
+            "shots": 3,
+            "xg": 0.46,
+            "recoveries": 6,
+            "final_third_entries": 1
+          },
+          "NBR_10": {
+            "involvement": 112,
+            "passes_attempted": 63,
+            "passes_completed": 57,
+            "pass_accuracy": 90,
+            "shots": 1,
+            "xg": 0.06,
+            "recoveries": 18,
+            "final_third_entries": 9
+          },
+          "NBR_11": {
+            "involvement": 33,
+            "passes_attempted": 23,
+            "passes_completed": 16,
+            "pass_accuracy": 70,
+            "shots": 1,
+            "xg": 0.04,
+            "recoveries": 2,
+            "final_third_entries": 3
+          },
+          "NBR_14": {
+            "involvement": 23,
+            "passes_attempted": 15,
+            "passes_completed": 15,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 4,
+            "final_third_entries": 4
+          },
+          "NBR_15": {
+            "involvement": 7,
+            "passes_attempted": 5,
+            "passes_completed": 4,
+            "pass_accuracy": 80,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 0
+          },
+          "NBR_17": {
+            "involvement": 18,
+            "passes_attempted": 12,
+            "passes_completed": 7,
+            "pass_accuracy": 58,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 0,
+            "final_third_entries": 1
+          }
+        },
+        "RVA": {
+          "RVA_01": {
+            "involvement": 3,
+            "passes_attempted": 1,
+            "passes_completed": 1,
+            "pass_accuracy": 100,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 2,
+            "final_third_entries": 0
+          },
+          "RVA_02": {
+            "involvement": 70,
+            "passes_attempted": 40,
+            "passes_completed": 37,
+            "pass_accuracy": 93,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 18,
+            "final_third_entries": 4
+          },
+          "RVA_03": {
+            "involvement": 47,
+            "passes_attempted": 31,
+            "passes_completed": 28,
+            "pass_accuracy": 90,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 9,
+            "final_third_entries": 3
+          },
+          "RVA_04": {
+            "involvement": 101,
+            "passes_attempted": 69,
+            "passes_completed": 56,
+            "pass_accuracy": 81,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 12,
+            "final_third_entries": 4
+          },
+          "RVA_05": {
+            "involvement": 55,
+            "passes_attempted": 34,
+            "passes_completed": 30,
+            "pass_accuracy": 88,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 11,
+            "final_third_entries": 3
+          },
+          "RVA_06": {
+            "involvement": 62,
+            "passes_attempted": 38,
+            "passes_completed": 34,
+            "pass_accuracy": 89,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 6,
+            "final_third_entries": 3
+          },
+          "RVA_07": {
+            "involvement": 66,
+            "passes_attempted": 42,
+            "passes_completed": 28,
+            "pass_accuracy": 67,
+            "shots": 1,
+            "xg": 0.02,
+            "recoveries": 6,
+            "final_third_entries": 5
+          },
+          "RVA_08": {
+            "involvement": 99,
+            "passes_attempted": 66,
+            "passes_completed": 55,
+            "pass_accuracy": 83,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 11,
+            "final_third_entries": 9
+          },
+          "RVA_09": {
+            "involvement": 58,
+            "passes_attempted": 36,
+            "passes_completed": 25,
+            "pass_accuracy": 69,
+            "shots": 4,
+            "xg": 0.48,
+            "recoveries": 6,
+            "final_third_entries": 0
+          },
+          "RVA_10": {
+            "involvement": 93,
+            "passes_attempted": 54,
+            "passes_completed": 49,
+            "pass_accuracy": 91,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 17,
+            "final_third_entries": 6
+          },
+          "RVA_11": {
+            "involvement": 41,
+            "passes_attempted": 26,
+            "passes_completed": 20,
+            "pass_accuracy": 77,
+            "shots": 1,
+            "xg": 0.03,
+            "recoveries": 7,
+            "final_third_entries": 3
+          },
+          "RVA_14": {
+            "involvement": 13,
+            "passes_attempted": 9,
+            "passes_completed": 7,
+            "pass_accuracy": 78,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 1,
+            "final_third_entries": 1
+          },
+          "RVA_16": {
+            "involvement": 7,
+            "passes_attempted": 4,
+            "passes_completed": 3,
+            "pass_accuracy": 75,
+            "shots": 0,
+            "xg": 0.0,
+            "recoveries": 3,
+            "final_third_entries": 0
+          },
+          "RVA_18": {
+            "involvement": 14,
+            "passes_attempted": 7,
+            "passes_completed": 3,
+            "pass_accuracy": 43,
+            "shots": 3,
+            "xg": 0.66,
+            "recoveries": 0,
+            "final_third_entries": 0
+          }
+        }
+      }
+    }
+  }
+}

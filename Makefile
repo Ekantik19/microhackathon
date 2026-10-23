@@ -43,6 +43,7 @@ format:
 
 generate-data:
 	cd $(BACKEND) && uv run python -m app.events.generator --seed 42 --match-id demo_01
+	python3 scripts/compute_expected_stats.py --match-id demo_01
 
 prewarm:
 	cd $(BACKEND) && uv run python ../scripts/prewarm_insights.py

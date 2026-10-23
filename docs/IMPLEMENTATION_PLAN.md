@@ -17,12 +17,15 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - `pnpm` is used for the frontend and `uv` for the backend (both installed via Homebrew).
 - Commits are made locally at the end of each phase; pushing to GitHub is left to the human.
 - Python 3.12 from the system install is used by `uv` (no separate download).
+- Possession credits no team for the transition interval that ends in a change of possession (contested time).
+- Expected-stats checkpoints use the display clock: 45' = 2700 s (before 1st-half stoppage), 69' = 69:00.
+- Status: phases 1–3 complete.
 
 ## Blockers (need the human)
 
 | Blocker | Needed for | Status |
 |---|---|---|
-| GitHub push auth | CI running on GitHub (Phase 1 "CI passes") | open |
+| GitHub push auth | CI running on GitHub (Phase 1 "CI passes") | resolved (pushed, CI green) |
 | Microsoft Foundry project, model deployment, endpoint and key | Phase 10 live verification | open |
 | Microsoft Fabric workspace + Eventstream custom endpoint | Phase 11 live verification | open (optional) |
 | Azure subscription, `az`/`azd`/Docker installed, `az login` | Phase 14 deploy | open |
