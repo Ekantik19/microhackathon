@@ -68,3 +68,24 @@ test("the stream retries with backoff and resyncs when it comes back", async ({ 
   await expect(page.getByText("Live connection lost. Reconnecting…")).toBeHidden({ timeout: 20_000 });
   await expect(page.getByTestId("clock")).toHaveText(/^10:00/); // resynced from REST on reconnect
 });
+
+test("Demo mode walks the storyline: live insights with a grounding check, then the full-time recap", async ({ page }) => {
+  test.setTimeout(120_000);
+  const errors = trackErrors(page);
+  await page.goto("/match/demo_01");
+  await expect(page.getByTestId("clock")).toHaveText(/^00:00/);
+  const started = Date.now();
+  await page.getByTestId("demo-button").click();
+
+  const card = page.getByTestId("insight-card").first();
+  await expect(card).toBeVisible({ timeout: 40_000 });
+  await expect(card).toContainText("Mock");
+  await card.getByText(/Evidence/).click();
+  await expect(card.getByTestId("grounding-check")).toContainText("Passed first time");
+
+  await expect(page.getByTestId("status-pill")).toHaveText("Full time", { timeout: 90_000 });
+  await expect(page.getByTestId("recap").first()).toContainText("At full-time it is Northbridge FC 1-1 Riverside Athletic");
+  expect(Date.now() - started).toBeLessThan(90_000); // demo mode finishes in under 90 s
+  await expect(page.getByTestId("score")).toContainText("1–1");
+  expect(errors).toEqual([]);
+});

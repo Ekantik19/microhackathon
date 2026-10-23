@@ -54,8 +54,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 6 | Phase 6: frontend on mock data + Playwright smoke | ✅ done (commit `phase 6`) |
 | 7 | Phase 7: connect frontend to real API/SSE | ✅ done (commit `phase 7`) |
 | 8 | Phase 8: pattern detectors + key moments | ✅ done (commit `phase 8`) |
-| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test **+ visible "Grounding check" on cards** | ⏳ next |
-| 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | waiting on human |
+| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test **+ visible "Grounding check" on cards** | ✅ done (commit `phase 9`) |
+| 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | ⏳ next: waiting on human |
 | 10 | Phase 10: FoundryAIProvider, prompts, structured output, fallback, cache, prewarm | todo |
 | 11 | **NEW (judging lever): MCP server with read-only match tools + "Ask the match" agent** (Foundry tool calling over the same tools, answers checked by the same validator) + chat panel in the UI | todo |
 | 12 | **NEW: Club-focused and Player-focused modes** (modes are data; small UI picker) | todo |
@@ -135,30 +135,40 @@ Oct 27, 6 pm PT: if time runs short, cut from the bottom of the table (17, then 
   timeline on resync. demo_01 → 12 detections exactly as storyline.md (pinned). Seek with detectors ≤ 0.6 s.
   Tests: `test_patterns.py` (12 fixtures), `test_storyline_detections.py`, `test_detections_live.py`; real e2e checks
   the intel strip. 86 backend tests green (~18 s).
+- Step 9 done: `app/ai/{README.md (§4 rule), models.py, factpack.py, modes.py, validator.py, providers.py (AIProvider,
+  MockAIProvider, template_recap, get_provider), fallback.py (TemplateFallback), generate.py (draft → validate →
+  regenerate once with violations → template; records GenerationAttempt list)}`, `config/modes.yaml` (casual,
+  tactical visible; broadcaster/club_focus/player_focus/fantasy hidden), `app/services/orchestrator.py`
+  (`Orchestrator.attach` = hook factory for on_reset, `on_detection` listener from `detection_hooks(...,
+  listeners=[...])`, eager generation for visible modes, `insight_pending` → `insight`, recaps at HT/FT, epoch guard,
+  semaphore 4, caches `store.insight_cache` / `store.recap_cache`, `recap_now` for POST /generate-recap → 409
+  `recap_not_available` if scope not reached). Insight gained `attempts`, `facts` (labels "· Team"); Recap gained
+  `attempts`, `cited_event_ids`. Frontend: `components/GroundingCheck.tsx` in Evidence + recaps, verified facts list.
+  Mock fixture re-recorded from the real pipeline (`scripts/record_mock_stream.py` now drives `create_app`).
+  Tests: `test_validator.py`, `test_ai_generation.py`, `tests/e2e/test_pipeline.py` (spec §14 five checks), API
+  insights/recap test, real Playwright "Demo → insight + Grounding check → full-time recap < 90 s" (demo ≈ 36 s).
+  111 backend tests + 4 mock e2e + 4 real e2e green.
 
 ## Next steps
 
-- Step 9 (Phase 9, spec §8.2–8.6, §14 E2E): `app/ai/README.md` (§4 rule at top), `factpack.py` (FactPack /
-  RecapFactPack built by code from MatchState + Detection: trigger, score_before/after, window facts with event_ids,
-  detections, recent_events, allowed_names, clock_second; only data ≤ clock), `modes.py` + `config/modes.yaml`
-  (casual, tactical; stretch modes defined but hidden), `providers.py` (`AIProvider` Protocol, `MockAIProvider`
-  deterministic templates tagged `mock`), `fallback.py` (`TemplateFallback`, tagged `template`), `validator.py`
-  (numbers incl. number words one–twenty, percentages, minutes, scores; capitalized names vs allowed_names with a
-  common-word allow-list; cited_event_ids exist + ≤ clock; supporting_stats match facts) → ValidatorResult,
-  `recap.py`, `app/services/orchestrator.py` (hook: on pattern detection → live insight; goal/big_chance/card →
-  key-moment explanation; half_time/full_time → recap; publish `insight_pending` then `insight` per mode in background
-  tasks; regenerate once on validator failure then template; cache by (match_id, trigger_id, mode) in
-  `store.insight_cache`; lazily generate other modes on `/insights?mode=` if missing; skip AI while replaying a
-  seek but still produce insights for past detections from cache/mock?—decide). Set `app.state.recap_generator` so
-  `/generate-recap` works. Tests: validator catches invented number, unknown name, future event ID; modes cite the
-  same facts; recap time safety; E2E `tests/e2e/test_pipeline.py` (§14 list). Update the mock Playwright smoke and
-  re-record the mock fixture (`make record-mock`) so it uses real insights. Add the real-API Playwright "Demo →
-  insight card + recap" test.
-- **Step 9 addition, visible grounding:** store every generation attempt on the Insight/Recap (e.g.
-  `attempts: [{generated_by, passed, violations}]`) and show a "Grounding check" in the card's Evidence area: "Passed
-  first time" or "Draft rejected: invented number 4 (shots) → regenerated → passed" or "Fell back to template".
-  Must be honest: in mock mode drafts always pass. A deliberate validator demo, if added, must be clearly labelled
-  as one (e.g. a tested `/debug` or docs example), never presented as real model output.
+- **🔐 Checkpoint B (human):** create a Microsoft Foundry project + chat model deployment (e.g. gpt-4.1-mini), put
+  `AI_PROVIDER=foundry`, `FOUNDRY_ENDPOINT`, `FOUNDRY_API_KEY`, `FOUNDRY_MODEL_DEPLOYMENT` in repo-root `.env`
+  (never in chat). Before giving instructions, CHECK CURRENT FOUNDRY DOCS (web-fetch) for the endpoint/base-URL format
+  and API version for the `openai` SDK; do not guess. Write the verified steps into `docs/setup-foundry.md`.
+- Step 10 (Phase 10, spec §8.3): `app/ai/foundry.py` `FoundryAIProvider` (openai SDK against the Foundry endpoint,
+  structured output JSON schema for InsightDraft/RecapDraft, system prompt `app/ai/prompts/system.md` with the §8.3
+  rules + "copy fact labels exactly; only cite event IDs from the FactPack", user message = FactPack JSON + mode,
+  temperature 0.3, max tokens, timeout `AI_TIMEOUT_SECONDS`, 1 retry on transient errors, `previous violations` in
+  the retry message, API key locally / `DefaultAzureCredential` when `FOUNDRY_USE_MANAGED_IDENTITY=true`, logs
+  provider/deployment/latency/tokens/validator, never keys). `get_provider` returns it when configured, else mock
+  with one clear warning. `/health` and the UI badge then show `foundry`; badge "Fallback" when the latest insight is
+  `template`. `scripts/prewarm_insights.py` runs every demo_01 trigger (both modes + recaps) against Foundry and
+  reports validator results (fix prompts, never loosen the validator). **Cache persistence decision needed:** the
+  cache is in memory until Step 13 (DB); either add a small JSON-file cache now (e.g. `data/cache/insights.json`,
+  git-ignored) that the API loads on startup, or run prewarm through the API. Tests with a fake OpenAI client:
+  structured output parsed, timeout → template, transient error retried once, validator failure → regenerate.
+  Cloud integration test marked `@pytest.mark.cloud`, skipped without env vars. Watch for validator false positives
+  from real prose (COMMON_WORDS gaps): extend the common-word list only with genuine ordinary words, never names.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -233,6 +243,12 @@ Oct 27, 6 pm PT: if time runs short, cut from the bottom of the table (17, then 
 - Detector contracts: momentum needs t ≥ 600 and a previous leader (ties = no leader); high press only evaluates on a
   new high recovery; key moments fire on the defining event (goal, shot xG ≥ 0.30 not goal, card, period_end).
   Detections cite only events ≤ end_second (tested). Fixture factory `ev()` sets period 2 for t ≥ 2820.
+- **AI contracts:** FactPack is built synchronously in `on_detection` (time safety); it lists only detections from the
+  last 10 min (older minutes were letting invented numbers through). Allowed numbers = fact values + scores +
+  minutes in the pack; supporting stats must match a fact with the same label (team suffix allowed). Insight IDs
+  `{match}:{detection_id}:{mode}`; detection IDs are deterministic from kickoff, so caches survive seek/reset.
+  `tests/fixtures/demo.py` replays demo_01 and builds every FactPack (cached). Background tasks: tests call
+  `await app.state.orchestrator.idle()`. E2E uses a FakeClock by setting `sim._now/_sleep`.
 
 ## Problems faced and solutions
 

@@ -46,7 +46,6 @@ class MockMatch {
   private timer: ReturnType<typeof setInterval> | null = null;
   private listeners = new Set<{ mode: Mode; handlers: StreamHandlers }>();
   events: MatchEvent[] = [];
-  detections: TimelineItem[] = [];
   insights: Insight[] = [];
   recaps: Recap[] = [];
   lastStats: StatsPayload | null = null;
@@ -64,7 +63,6 @@ class MockMatch {
     this.cursor = 0;
     this.emittedEvents = 0;
     this.events = [...this.rec.snapshot.recent_events];
-    this.detections = [];
     this.insights = [];
     this.recaps = [];
     this.lastStats = null;
@@ -108,22 +106,6 @@ class MockMatch {
       this.insights = [...this.insights.filter((i) => !(i.trigger_id === insight.trigger_id && i.mode === insight.mode)), insight];
     }
     if (topic === "recap") this.recaps = [...this.recaps, data as Recap];
-    if (topic === "detection") {
-      const d = data as { detection_id: string; pattern: string; kind: string; team_id: string; end_second: number; minute: number; second: number; period: number };
-      if (d.kind === "pattern") {
-        this.detections.push({
-          kind: "detection",
-          id: d.detection_id,
-          match_second: d.end_second,
-          minute: d.minute,
-          second: d.second,
-          period: d.period,
-          type: d.pattern,
-          team_id: d.team_id,
-          label: d.pattern.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase()),
-        });
-      }
-    }
     if (live) this.broadcast(topic, data);
   }
 
@@ -215,8 +197,8 @@ class MockMatch {
   }
 
   timeline(): TimelineItem[] {
-    const items = this.rec.end_timeline.filter((i) => i.match_second <= this.clock);
-    return [...items, ...this.detections].sort((a, b) => a.match_second - b.match_second);
+    // The recorded end-of-slice timeline already holds every event and detection up to 70:30.
+    return this.rec.end_timeline.filter((i) => i.match_second <= this.clock);
   }
 
   generateRecap(mode: Mode): Recap {

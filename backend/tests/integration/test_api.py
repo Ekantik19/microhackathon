@@ -113,10 +113,36 @@ async def test_demo_starts_in_background_and_reset_cancels_it(client):
     assert not app_registry.demo_running("demo_01")
 
 
-async def test_insights_and_recaps_empty_before_ai(client):
+async def test_insights_and_recaps_empty_before_the_replay(client):
     assert (await client.get("/matches/demo_01/insights", params={"mode": "tactical"})).json() == []
     assert (await client.get("/matches/demo_01/recaps")).json() == []
     r = await client.get("/matches/demo_01/insights", params={"mode": "pirate"})
     assert r.status_code == 422
     r = await client.post("/matches/demo_01/generate-recap", json={"mode": "casual", "scope": "now"})
-    assert r.status_code == 503 and r.json()["error"]["code"] == "recap_unavailable"
+    assert r.status_code == 409 and r.json()["error"]["code"] == "recap_not_available"
+
+
+async def test_insights_recaps_and_on_demand_recap_after_seek(client):
+    app = client._transport.app  # type: ignore[attr-defined]
+    await client.post("/matches/demo_01/simulation/seek", json={"match_second": 2820 + 25 * 60})  # 70:00
+    await app.state.orchestrator.idle()
+    casual = (await client.get("/matches/demo_01/insights", params={"mode": "casual"})).json()
+    tactical = (await client.get("/matches/demo_01/insights", params={"mode": "tactical"})).json()
+    assert [i["minute"] for i in casual] == [12, 23, 35, 42, 44, 52, 66, 69]
+    assert [i["trigger_id"] for i in casual] == [i["trigger_id"] for i in tactical]
+    assert all(i["validator"]["passed"] for i in casual + tactical)
+    assert casual[-1]["body"] != tactical[-1]["body"]
+
+    recaps = (await client.get("/matches/demo_01/recaps")).json()
+    assert [(r["scope"], r["mode"]) for r in recaps] == [("half_time", "casual"), ("half_time", "tactical")]
+
+    now = await client.post("/matches/demo_01/generate-recap", json={"mode": "tactical", "scope": "now"})
+    assert now.status_code == 200 and now.json()["minute"] == 70 and "1-1" in now.json()["body"]
+    early = await client.post(
+        "/matches/demo_01/generate-recap", json={"mode": "casual", "scope": "full_time"}
+    )
+    assert early.status_code == 409 and early.json()["error"]["code"] == "recap_not_available"
+
+    await client.post("/matches/demo_01/simulation/seek", json={"match_second": 600})
+    await app.state.orchestrator.idle()
+    assert (await client.get("/matches/demo_01/insights", params={"mode": "casual"})).json() == []

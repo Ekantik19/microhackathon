@@ -147,6 +147,7 @@ export type Detection = {
 
 export type SupportingStat = { label: string; value: number | string; unit: string };
 export type ValidatorResult = { passed: boolean; violations: string[] };
+export type GenerationAttempt = { generated_by: string; passed: boolean; violations: string[] };
 
 export type Insight = {
   insight_id: string;
@@ -164,6 +165,8 @@ export type Insight = {
   model?: string | null;
   latency_ms?: number | null;
   validator: ValidatorResult;
+  attempts?: GenerationAttempt[];
+  facts?: SupportingStat[];
   created_at: string;
 };
 
@@ -181,6 +184,8 @@ export type Recap = {
   stats_summary: SupportingStat[];
   generated_by: string;
   validator: ValidatorResult;
+  attempts?: GenerationAttempt[];
+  cited_event_ids?: string[];
   created_at: string;
 };
 

@@ -35,7 +35,10 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - Signal strength (rule-based) compares each metric with 1.5× its threshold (configurable). The spec's "ratio to its
   threshold, capped at 1" is always 1.0 at the moment a rule fires, so it would carry no information.
 - The momentum detector needs two full windows (t ≥ 10 min) and a previous leader; a tie counts as no leader.
-- Status: phases 1–8 complete.
+- Insights are generated eagerly for both visible modes (Casual, Tactical) so a live mode switch is instant; hidden
+  modes will be generated lazily.
+- Live-insight FactPacks list only detections from the last 10 minutes; recaps see all detections so far.
+- Status: phases 1–9 complete.
 
 ## Blockers (need the human)
 

@@ -9,12 +9,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
+from app.ai.modes import load_modes
+from app.ai.providers import get_provider
 from app.api import health, insights, matches, simulation, stream
 from app.api.errors import install_error_handlers
 from app.config import Settings, get_settings
 from app.patterns.config import load_patterns_config
 from app.patterns.hook import detection_hooks
 from app.services.bus import EventBus
+from app.services.orchestrator import Orchestrator
 from app.services.registry import MatchRegistry
 from app.services.store import MatchStore
 
@@ -32,12 +35,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.bus = EventBus()
     app.state.store = MatchStore()
+    app.state.ai_provider = get_provider(settings)
+    orchestrator = Orchestrator(
+        app.state.store,
+        app.state.bus,
+        app.state.ai_provider,
+        load_modes(settings.config_dir),
+        timeout=settings.ai_timeout_seconds,
+    )
+    app.state.orchestrator = orchestrator
+    app.state.recap_generator = orchestrator.recap_now
+    patterns = load_patterns_config(settings.config_dir)
     app.state.registry = MatchRegistry(
         settings.data_dir,
         app.state.bus,
         app.state.store,
         hook_factories=[
-            detection_hooks(app.state.store, app.state.bus, load_patterns_config(settings.config_dir))
+            orchestrator.attach,
+            detection_hooks(app.state.store, app.state.bus, patterns, listeners=[orchestrator.on_detection]),
         ],
     )
 

@@ -19,7 +19,7 @@ export default defineConfig({
       url: `http://localhost:${API_PORT}/health`,
       reuseExistingServer: false,
       timeout: 120_000,
-      env: { WEB_ORIGIN: `http://localhost:${WEB_PORT}`, AI_PROVIDER: "mock", EVENT_SOURCE: "local" },
+      env: { WEB_ORIGIN: `http://localhost:${WEB_PORT}`, AI_PROVIDER: "mock", EVENT_SOURCE: "local", LOG_LEVEL: "WARNING" },
     },
     {
       command: `pnpm exec next dev --port ${WEB_PORT}`,

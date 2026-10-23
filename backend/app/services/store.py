@@ -15,6 +15,7 @@ class MatchStore:
         self._insights: dict[str, list[Insight]] = defaultdict(list)
         self._recaps: dict[str, list[Recap]] = defaultdict(list)
         self.insight_cache: dict[tuple[str, str, str], Insight] = {}
+        self.recap_cache: dict[tuple[str, str, str], Recap] = {}
 
     def add_detection(self, detection: Detection) -> None:
         self._detections[detection.match_id].append(detection)
@@ -36,7 +37,13 @@ class MatchStore:
         return sorted((i for i in self._insights[match_id] if i.mode == mode), key=lambda i: i.match_second)
 
     def add_recap(self, recap: Recap) -> None:
-        self._recaps[recap.match_id].append(recap)
+        live = self._recaps[recap.match_id]
+        live[:] = [r for r in live if r.recap_id != recap.recap_id]
+        live.append(recap)
+
+    def clear_insights(self, match_id: str) -> None:
+        self._insights.pop(match_id, None)
+        self._recaps.pop(match_id, None)
 
     def recaps(self, match_id: str, mode: str | None = None) -> list[Recap]:
         return [r for r in self._recaps[match_id] if mode is None or r.mode == mode]

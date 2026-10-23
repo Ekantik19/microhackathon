@@ -16,6 +16,14 @@ class ValidatorResult(BaseModel):
     violations: list[str] = Field(default_factory=list)
 
 
+class GenerationAttempt(BaseModel):
+    """One draft and what the grounding validator said about it (shown as the "Grounding check")."""
+
+    generated_by: str  # foundry | mock | template
+    passed: bool
+    violations: list[str] = Field(default_factory=list)
+
+
 class Insight(BaseModel):
     insight_id: str
     match_id: str
@@ -32,6 +40,8 @@ class Insight(BaseModel):
     model: str | None = None
     latency_ms: int | None = None
     validator: ValidatorResult
+    attempts: list[GenerationAttempt] = Field(default_factory=list)
+    facts: list[SupportingStat] = Field(default_factory=list)  # the verified facts the text was written from
     created_at: datetime
 
 
@@ -53,4 +63,6 @@ class Recap(BaseModel):
     stats_summary: list[SupportingStat] = Field(default_factory=list)
     generated_by: str
     validator: ValidatorResult
+    attempts: list[GenerationAttempt] = Field(default_factory=list)
+    cited_event_ids: list[str] = Field(default_factory=list)
     created_at: datetime

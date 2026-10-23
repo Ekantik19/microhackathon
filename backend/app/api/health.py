@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
 from app import __version__
@@ -16,9 +16,14 @@ class Health(BaseModel):
 
 
 @router.get("/health", response_model=Health)
-async def health() -> Health:
+async def health(request: Request) -> Health:
     s = get_settings()
+    provider = getattr(request.app.state, "ai_provider", None)
     # Dependency status is filled in by later phases (AI fallback, Fabric fallback, DB reachability).
     return Health(
-        status="ok", version=__version__, ai_provider=s.ai_provider, event_source=s.event_source, db="n/a"
+        status="ok",
+        version=__version__,
+        ai_provider=provider.name if provider else s.ai_provider,
+        event_source=s.event_source,
+        db="n/a",
     )

@@ -1,4 +1,5 @@
 import type { Mode, Recap } from "@/lib/types";
+import { GroundingCheck } from "./GroundingCheck";
 
 const SCOPE: Record<string, string> = { half_time: "Half-time recap", full_time: "Full-time recap", now: "Recap so far" };
 
@@ -41,6 +42,9 @@ export function RecapPanel({ recaps, mode, onGenerate, busy }: { recaps: Recap[]
                   </ul>
                 </>
               )}
+              <div className="mt-3 text-xs text-muted">
+                <GroundingCheck attempts={r.attempts} />
+              </div>
             </article>
           ))}
         </div>

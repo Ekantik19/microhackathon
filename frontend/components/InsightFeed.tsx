@@ -1,5 +1,6 @@
 import { formatValue } from "@/lib/format";
 import type { Insight, PendingInsight } from "@/lib/types";
+import { GroundingCheck } from "./GroundingCheck";
 
 const GENERATED_BY: Record<string, string> = { foundry: "AI · Foundry", mock: "Mock", template: "Template" };
 const TYPE_LABEL: Record<string, string> = { pattern: "Pattern", key_moment: "Key moment", recap: "Recap" };
@@ -26,9 +27,21 @@ function InsightCard({ insight, onHighlight }: { insight: Insight; onHighlight: 
       )}
       <details className="mt-3 text-xs text-muted">
         <summary className="cursor-pointer select-none hover:text-foreground">Evidence ({insight.cited_event_ids.length} events)</summary>
-        <p className="mt-2">
-          Facts come from code-computed stats. Validator: {insight.validator.passed ? "passed" : `failed (${insight.validator.violations.join("; ")})`}.
-        </p>
+        <GroundingCheck attempts={insight.attempts} />
+        {insight.facts && insight.facts.length > 0 && (
+          <>
+            <p className="mt-2 font-semibold text-foreground">Verified facts given to the writer (computed by code)</p>
+            <ul className="mt-1 grid grid-cols-1 gap-x-3 sm:grid-cols-2">
+              {insight.facts.map((f) => (
+                <li key={f.label} className="flex justify-between gap-2">
+                  <span>{f.label}</span>
+                  <span className="tabular text-foreground">{typeof f.value === "number" ? formatValue(f.value, f.unit) : f.value}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <p className="mt-2 font-semibold text-foreground">Cited events</p>
         <div className="mt-2 flex flex-wrap gap-1">
           {insight.cited_event_ids.map((id) => (
             <button

@@ -1,0 +1,50 @@
+# Viewer modes (PERSONALIZE). Modes are data: they change wording and how many stats are shown, never the facts.
+casual:
+  label: Casual
+  audience: "A fan new to football tactics"
+  style: "Plain, friendly, no jargon. Explain any football term in a few words."
+  max_words: 35
+  include_stats: 1
+  terminology: basic
+tactical:
+  label: Tactical
+  audience: "An analyst who wants evidence"
+  style: "Precise. Name zones, sequences and windows. Reference detected patterns by name."
+  max_words: 45
+  include_stats: 3
+  terminology: advanced
+# Defined but hidden until implemented (Step 12 / stretch):
+broadcaster:
+  label: Broadcaster
+  audience: "A TV studio presenter"
+  style: "Two short talking points and one on-screen stat."
+  max_words: 40
+  include_stats: 1
+  terminology: basic
+  hidden: true
+club_focus:
+  label: Club
+  audience: "A supporter of one club"
+  style: "Lead with what the moment means for the chosen club."
+  max_words: 35
+  include_stats: 2
+  terminology: basic
+  hidden: true
+  requires: club_id
+player_focus:
+  label: Player
+  audience: "A fan following one player"
+  style: "Lead with the chosen player's recorded actions."
+  max_words: 35
+  include_stats: 2
+  terminology: basic
+  hidden: true
+  requires: player_id
+fantasy:
+  label: Fantasy
+  audience: "A fantasy-football manager"
+  style: "Focus on involvement, shots and synthetic xG."
+  max_words: 35
+  include_stats: 2
+  terminology: basic
+  hidden: true
