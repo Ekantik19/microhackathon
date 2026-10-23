@@ -53,6 +53,8 @@ class Simulator:
         self.source = source
         self.bus = bus
         self.hooks = list(hooks or [])
+        # Called whenever state is rebuilt from scratch (reset, and the start of every seek).
+        self.on_reset: list[Callable[[], None]] = []
         self.tick = tick
         self._now = now
         self._sleep = sleep
@@ -133,6 +135,8 @@ class Simulator:
             self.clock = 0.0
             self._cursor = 0
             self.state.reset()
+            for callback in self.on_reset:
+                callback()
         self._publish_status()
 
     async def seek(self, match_second: int) -> None:
@@ -141,6 +145,8 @@ class Simulator:
         async with self._lock:
             self.state.reset()
             self._cursor = 0
+            for callback in self.on_reset:
+                callback()
             while self._cursor < len(self.events) and self.events[self._cursor].match_second <= target:
                 event = self.events[self._cursor]
                 self._cursor += 1

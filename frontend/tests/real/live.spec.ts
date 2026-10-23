@@ -42,6 +42,10 @@ test("seek and timeline clicks rebuild the view; reset clears it", async ({ page
   await request.post(`${API}/matches/demo_01/simulation/seek`, { data: { match_second: 2820 + 25 * 60 } }); // 70:00
   await expect(page.getByTestId("score")).toContainText("1–1");
   await expect(page.getByTestId("clock")).toHaveText(/^70:00/);
+  // Phase 8 detectors: the live intelligence strip and the timeline show the 66' sustained-pressure spell.
+  await expect(page.getByTestId("intel-strip")).toContainText("Northbridge sustained pressure since 61'");
+  await expect(page.getByTestId("intel-strip")).toContainText("Signal strength (rule-based)");
+  await expect(page.getByRole("button", { name: /^66' Sustained pressure/ })).toBeVisible();
 
   await page.getByRole("button", { name: /Goal: Andrei Kovalski/ }).click();
   await expect(page.getByTestId("score")).toContainText("0–1");

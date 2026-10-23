@@ -34,15 +34,17 @@ the scripted ones.
 
 | Detector | Expected | Notes |
 |---|---|---|
-| `high_press_sequence` RVA | ~42:42 | Third high recovery within 180 s |
-| `sustained_pressure` NBR | ~66:40 | Last 5 min: possession ≥ 65 %, ≥ 3 shots, ≥ 6 final-third entries |
-| `momentum_shift` → RVA | ~77:50 | Riverside lead the attacking index after Northbridge led the previous 5 min |
-| Key moments | 23' goal, 35' card, 52' card, 69' goal, 86' big chance, half-time, full-time | |
+| `high_press_sequence` RVA | 42:42 | Third high recovery within 180 s (signal strength 0.67) |
+| `sustained_pressure` NBR | 66:40 | Last 5 min: 89 % possession, 3 shots, 6 final-third entries (signal 0.75) |
+| `momentum_shift` → RVA | 77:50 | Riverside index 10.75 vs Northbridge 0 after Northbridge led the previous 5 min (11.75) |
+| Key moments | 23:05 goal, 35:45 card, 47:00 half-time, 52:35 card, 69:07 goal, 86:12 big chance, 94:00 full-time | |
 
-**Emergent (not scripted) detections.** Background play is random, so the momentum detector also fires at about
-12' (an early Riverside spell, index just over the threshold of 8) and about 44' (Riverside's press carrying into
-a short attacking spell before half-time). These are real outputs of the rule on this data and are left in.
-Exact minutes are pinned by tests in Phase 8.
+Run `cd backend && uv run python -m app.patterns.report demo_01` to print the list.
+
+**Emergent (not scripted) detections.** Background play is random, so the momentum detector also fires at 12:45
+(an early Riverside spell: index 11.25 vs a previous 1.0) and 44:29 (Riverside's press carrying into a short
+attacking spell before half-time). These are real outputs of the rule on this data and are left in. The full list is
+pinned by `backend/tests/unit/test_storyline_detections.py`.
 
 ## Synthetic xG
 

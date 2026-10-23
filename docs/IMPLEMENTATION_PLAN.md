@@ -25,7 +25,10 @@ commit: 1 repo/env → 2 dataset → 3 analytics → 4 simulator → 5 API+SSE �
 - The mock data layer replays a recorded 63:30–70:30 slice of the real simulator (not the whole match) to keep the
   fixture small; its sample insights are written from the recorded stats and labeled Mock.
 - The UI also loads state over REST on mount, so it is useful even if the live stream is down.
-- Status: phases 1–7 complete.
+- Signal strength (rule-based) compares each metric with 1.5× its threshold (configurable). The spec's "ratio to its
+  threshold, capped at 1" is always 1.0 at the moment a rule fires, so it would carry no information.
+- The momentum detector needs two full windows (t ≥ 10 min) and a previous leader; a tie counts as no leader.
+- Status: phases 1–8 complete.
 
 ## Blockers (need the human)
 

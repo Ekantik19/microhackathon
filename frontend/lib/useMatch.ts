@@ -48,6 +48,27 @@ type Action =
 const initial: State = { events: [], timeline: [], detections: [], insights: [], pending: [], recaps: [], connection: "connecting" };
 const MAX_EVENTS = 60;
 
+const capitalize = (s: string) => s.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+
+/** Timeline detection items carry enough to rebuild the live intelligence strip after a resync. */
+function detectionFromTimeline(i: TimelineItem): Detection {
+  return {
+    detection_id: i.id,
+    match_id: "",
+    pattern: i.type,
+    kind: "pattern",
+    team_id: i.team_id,
+    start_second: i.start_second ?? i.match_second,
+    end_second: i.match_second,
+    minute: i.minute,
+    second: i.second,
+    period: i.period,
+    rule_strength: i.rule_strength ?? null,
+    evidence: {},
+    event_ids: [],
+  };
+}
+
 function upsert<T>(list: T[], item: T, same: (a: T) => boolean): T[] {
   return [...list.filter((x) => !same(x)), item];
 }
@@ -66,7 +87,7 @@ function reducer(state: State, action: Action): State {
         insights: action.insights,
         recaps: action.recaps,
         pending: [],
-        detections: state.detections.filter((d) => d.end_second <= action.sim.clock_second),
+        detections: action.timeline.filter((i) => i.kind === "detection").map(detectionFromTimeline),
         error: undefined,
       };
     case "insights":
@@ -127,7 +148,9 @@ function applyMessage(state: State, topic: string, data: unknown, mode: Mode): S
                 period: d.period,
                 type: d.pattern,
                 team_id: d.team_id,
-                label: d.pattern.replace(/_/g, " "),
+                label: capitalize(d.pattern),
+                start_second: d.start_second,
+                rule_strength: d.rule_strength,
               },
             ]
           : state.timeline;

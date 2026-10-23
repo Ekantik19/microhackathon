@@ -61,6 +61,8 @@ class TimelineItem(BaseModel):
     team_id: str | None
     player_id: str | None = None
     label: str
+    start_second: int | None = None  # detections: start of the window the rule looked at
+    rule_strength: float | None = None  # detections: "Signal strength (rule-based)", never a probability
 
 
 class Timeline(BaseModel):

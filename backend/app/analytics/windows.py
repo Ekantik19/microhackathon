@@ -32,6 +32,18 @@ def window_stats(
 ) -> WindowStats:
     """`events` must be in seq order and contain only events received so far."""
     t0, t1 = window_bounds(window, end_second)
+    return window_stats_between(events, t0, t1, teams, window=window, with_players=with_players)
+
+
+def window_stats_between(
+    events: Sequence[Event],
+    t0: int | None,
+    t1: int,
+    teams: Sequence[str],
+    window: str = "custom",
+    with_players: bool = True,
+) -> WindowStats:
+    """Stats for the window (t0, t1]. `events` must be in seq order; events after t1 are ignored."""
     # Keep one event before the window: its control interval may run into the window.
     seconds = [e.match_second for e in events]
     start = 0 if t0 is None else max(0, bisect_right(seconds, t0) - 1)

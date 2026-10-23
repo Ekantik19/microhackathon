@@ -53,8 +53,8 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
 | 5 | Phase 5: REST API + SSE | ✅ done (commit `phase 5`) |
 | 6 | Phase 6: frontend on mock data + Playwright smoke | ✅ done (commit `phase 6`) |
 | 7 | Phase 7: connect frontend to real API/SSE | ✅ done (commit `phase 7`) |
-| 8 | Phase 8: pattern detectors + key moments | ⏳ next |
-| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | todo |
+| 8 | Phase 8: pattern detectors + key moments | ✅ done (commit `phase 8`) |
+| 9 | Phase 9: FactPack, mock AI, validator, modes, orchestrator, E2E test | ⏳ next |
 | 🔐 B | Create Microsoft Foundry project + model deployment; put endpoint/key in `.env` | waiting on human |
 | 10 | Phase 10: FoundryAIProvider, prompts, prewarm | todo |
 | 🔐 C | (optional) Fabric workspace + Eventstream custom endpoint connection strings | waiting on human |
@@ -118,21 +118,35 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   Tests: `tests/mock/smoke.spec.ts` (`pnpm test:e2e`), `tests/real/live.spec.ts` + `playwright.real.config.ts`
   (`pnpm test:e2e:real`: starts uvicorn :8100 + next dev :3200; live stream, seek/timeline/reset, stream retry +
   resync via `page.route` abort). Both are in `make test`; CI has a new `e2e-real-api` job.
+- Step 8 done: `config/patterns.yaml`; `app/patterns/{config,base,sustained_pressure,momentum_shift,high_press,
+  key_moments,engine,hook,report}.py`. `Context(state, event)` caches the last and previous 5-min windows
+  (`analytics.windows.window_stats_between`). `PatternEngine.process(state, event)` → Detections with IDs
+  `d_0001…` (reset with the sim). `detect_all(events, teams, cfg)` for offline runs; CLI
+  `python -m app.patterns.report demo_01`. `Simulator.on_reset` callbacks (reset + start of every seek).
+  `detection_hooks(store, bus, cfg)` registered in `main.py`: store.add_detection always, bus `detection` only when
+  not replaying. `TimelineItem` gained `start_second`, `rule_strength`; frontend rebuilds `detections` from the
+  timeline on resync. demo_01 → 12 detections exactly as storyline.md (pinned). Seek with detectors ≤ 0.6 s.
+  Tests: `test_patterns.py` (12 fixtures), `test_storyline_detections.py`, `test_detections_live.py`; real e2e checks
+  the intel strip. 86 backend tests green (~18 s).
 
 ## Next steps
 
-- Step 8 (Phase 8, spec §8.1): `config/patterns.yaml` (thresholds, windows, cooldowns), `app/patterns/`
-  (`base.py` Detector protocol `evaluate(state, event) -> Detection | None` with plain-English docstrings;
-  `sustained_pressure.py`, `momentum_shift.py`, `high_press.py`, `key_moments.py` for goal / big_chance (xG ≥ 0.30,
-  not a goal) / card / half_time / full_time; `engine.py` runs all detectors per event, keeps cooldown state, resets
-  with the simulator; `report.py` CLI `python -m app.patterns.report demo_01`). `rule_strength` = average of each
-  metric's ratio to its threshold, capped at 1 (label "Signal strength (rule-based)"). Wire as a simulator hook via
-  `MatchRegistry.hook_factories` → store.add_detection + bus `detection`; clear on reset/seek (seek replays hooks with
-  replaying=True: rebuild detections silently). Tests: each detector fires/stays silent on fixtures, cooldowns,
-  storyline within ±2 min of scripted minutes (expect emergent momentum ~12' and ~44'), determinism. Keep per-event
-  cost low (detectors reuse one last_5 window computation; momentum needs prev window too). Re-measure demo wall time
-  (seeks replay hooks). Add `rule_strength` to timeline detection items if useful. Re-record the mock fixture later
-  (Step 9) so it uses real detections.
+- Step 9 (Phase 9, spec §8.2–8.6, §14 E2E): `app/ai/README.md` (§4 rule at top), `factpack.py` (FactPack /
+  RecapFactPack built by code from MatchState + Detection: trigger, score_before/after, window facts with event_ids,
+  detections, recent_events, allowed_names, clock_second; only data ≤ clock), `modes.py` + `config/modes.yaml`
+  (casual, tactical; stretch modes defined but hidden), `providers.py` (`AIProvider` Protocol, `MockAIProvider`
+  deterministic templates tagged `mock`), `fallback.py` (`TemplateFallback`, tagged `template`), `validator.py`
+  (numbers incl. number words one–twenty, percentages, minutes, scores; capitalized names vs allowed_names with a
+  common-word allow-list; cited_event_ids exist + ≤ clock; supporting_stats match facts) → ValidatorResult,
+  `recap.py`, `app/services/orchestrator.py` (hook: on pattern detection → live insight; goal/big_chance/card →
+  key-moment explanation; half_time/full_time → recap; publish `insight_pending` then `insight` per mode in background
+  tasks; regenerate once on validator failure then template; cache by (match_id, trigger_id, mode) in
+  `store.insight_cache`; lazily generate other modes on `/insights?mode=` if missing; skip AI while replaying a
+  seek but still produce insights for past detections from cache/mock?—decide). Set `app.state.recap_generator` so
+  `/generate-recap` works. Tests: validator catches invented number, unknown name, future event ID; modes cite the
+  same facts; recap time safety; E2E `tests/e2e/test_pipeline.py` (§14 list). Update the mock Playwright smoke and
+  re-record the mock fixture (`make record-mock`) so it uses real insights. Add the real-API Playwright "Demo →
+  insight card + recap" test.
 - After each step's commit, the human pushes; CI status can be checked without `gh` via
   `curl -s https://api.github.com/repos/Ekantik19/microhackathon/actions/runs?per_page=3` (public repo).
 
@@ -201,6 +215,12 @@ Each step is a small chunk ending with green tests, an updated CLAUDE.md, and a 
   (`.next-e2e-real`, CORS via `WEB_ORIGIN`). Only ONE `next dev` may run per distDir ("Another next dev server is
   already running"). `next dev` rewrites tsconfig.json includes for each distDir; those entries are committed.
 - Chromium `context.setOffline` does not cut an open localhost EventSource; use `page.route(..., abort)` instead.
+- **Signal strength deviation from spec:** spec says "ratio to its threshold, capped at 1", which is always 1.0 when a
+  rule fires. We use ratio to `strength_scale` (1.5) × threshold; the note text says so. Documented in patterns.yaml
+  and IMPLEMENTATION_PLAN.
+- Detector contracts: momentum needs t ≥ 600 and a previous leader (ties = no leader); high press only evaluates on a
+  new high recovery; key moments fire on the defining event (goal, shot xG ≥ 0.30 not goal, card, period_end).
+  Detections cite only events ≤ end_second (tested). Fixture factory `ev()` sets period 2 for t ≥ 2820.
 
 ## Problems faced and solutions
 

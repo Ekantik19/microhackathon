@@ -23,6 +23,9 @@ class MatchStore:
         items = self._detections[match_id]
         return [d for d in items if up_to_second is None or d.end_second <= up_to_second]
 
+    def clear_detections(self, match_id: str) -> None:
+        self._detections.pop(match_id, None)
+
     def add_insight(self, insight: Insight) -> None:
         live = self._insights[insight.match_id]
         live[:] = [i for i in live if (i.trigger_id, i.mode) != (insight.trigger_id, insight.mode)]

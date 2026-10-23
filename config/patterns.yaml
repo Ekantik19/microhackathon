@@ -1,0 +1,28 @@
+# Pattern detector thresholds (INTERPRET). These are configuration choices tuned on the synthetic scenarios,
+# not validated measures of football performance.
+
+# Signal strength (rule-based) = average over the rule's metrics of min(1, value / (strength_scale × threshold)).
+# It is not a confidence or a probability.
+strength_scale: 1.5
+
+sustained_pressure:
+  window_seconds: 300
+  min_possession_pct: 65
+  min_shots: 3
+  min_final_third_entries: 6
+  cooldown_seconds: 300 # per team
+
+momentum_shift:
+  window_seconds: 300 # compares the last 5 min with the 5 min before
+  weights: { shots: 3, final_third_entries: 1, high_recoveries: 2, xg: 5 }
+  min_index: 8
+  min_growth: 2.0 # new leader's index ≥ 2 × its own index in the previous window
+  cooldown_seconds: 480 # any team
+
+high_press_sequence:
+  window_seconds: 180
+  min_high_recoveries: 3
+  cooldown_seconds: 300 # per team
+
+key_moments:
+  big_chance_min_xg: 0.30

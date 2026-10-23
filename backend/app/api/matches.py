@@ -103,6 +103,8 @@ async def match_timeline(sim: Sim, request: Request) -> Timeline:
             type=d.pattern,
             team_id=d.team_id,
             label=d.pattern.replace("_", " ").capitalize(),
+            start_second=d.start_second,
+            rule_strength=d.rule_strength,
         )
         for d in store(request).detections(sim.match_id, up_to_second=sim.state.clock)
         if d.kind == "pattern"

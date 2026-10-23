@@ -124,6 +124,8 @@ export type TimelineItem = {
   team_id: string | null;
   player_id?: string | null;
   label: string;
+  start_second?: number | null;
+  rule_strength?: number | null;
 };
 
 export type Detection = {
